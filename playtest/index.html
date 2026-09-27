@@ -39,6 +39,7 @@ body{padding:18px;padding-bottom:max(18px,env(safe-area-inset-bottom))}.wrap{max
 </section>
 
 <section class="grid">
+<div class="card"><strong>📡 Contact</strong><span data-en="A voice-first word game where matching clues reveal the secret letter by letter." data-ru="Разговорная игра: совпавшие подсказки открывают секрет буква за буквой.">A voice-first word game where matching clues reveal the secret letter by letter.</span></div>
 <div class="card"><strong>⚡ Microgame Rush</strong><span data-en="Six fast timing, reaction and attention challenges." data-ru="Шесть быстрых испытаний на тайминг, реакцию и внимание.">Six fast timing, reaction and attention challenges.</span></div>
 <div class="card"><strong>✏️ Broken Telephone</strong><span data-en="A phrase mutates through drawings and guesses." data-ru="Фраза искажается через рисунки и догадки.">A phrase mutates through drawings and guesses.</span></div>
 <div class="card"><strong>🕵️ Wrong Question</strong><span data-en="One player secretly got a slightly different question." data-ru="Один игрок тайно получил немного другой вопрос.">One player secretly got a slightly different question.</span></div>
@@ -66,7 +67,7 @@ const $=s=>document.querySelector(s);
 function id(){try{let x=sessionStorage.getItem('tw_anon_session');if(!x){x=(crypto.randomUUID?crypto.randomUUID():'tw_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2));sessionStorage.setItem('tw_anon_session',x)}return x}catch(e){return 'tw_'+Date.now().toString(36)}}
 function attr(){try{const q=new URLSearchParams(location.search);return{utm_source:q.get('utm_source')||null,utm_medium:q.get('utm_medium')||null,utm_campaign:q.get('utm_campaign')||null,utm_content:q.get('utm_content')||null,utm_term:q.get('utm_term')||null,referrer_host:document.referrer?new URL(document.referrer).hostname:null,entry_path:location.pathname}}catch(e){return{}}}
 const A=attr();
-function capture(event,p){try{fetch(PH_HOST+'/i/v0/e/',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({api_key:PH_TOKEN,event,properties:Object.assign({distinct_id:id(),'$process_person_profile':false,prototype_version:'1.3-playtest'},A,p||{})}),keepalive:true,credentials:'omit'}).catch(()=>{})}catch(e){}}
+function capture(event,p){try{fetch(PH_HOST+'/i/v0/e/',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({api_key:PH_TOKEN,event,properties:Object.assign({distinct_id:id(),'$process_person_profile':false,prototype_version:'1.3.1-playtest'},A,p||{})}),keepalive:true,credentials:'omit'}).catch(()=>{})}catch(e){}}
 let lang=(new URLSearchParams(location.search).get('lang')||((navigator.language||'').toLowerCase().startsWith('ru')?'ru':'en'));
 function setLang(v){
  lang=v;document.documentElement.lang=v;
