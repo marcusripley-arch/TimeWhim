@@ -44,7 +44,7 @@ button.primary{background:var(--accent);color:#0c1018;border-color:transparent;f
 </head>
 <body>
 <div class="app">
-<div class="topbar"><div><div class="brand">TimeWhim · Mini Games Lab</div><div class="version">public test v1.3 · anonymous feedback</div></div><div class="topActions"><div class="langSwitch"><a id="langRu" class="active" href="./">RU</a><a id="langEn" href="./en/">EN</a></div><button id="homeBtn" class="secondary hidden" style="width:auto;min-height:40px">← Все игры</button></div></div>
+<div class="topbar"><div><div class="brand">TimeWhim · Mini Games Lab</div><div class="version">public test v1.3.1 · anonymous feedback</div></div><div class="topActions"><div class="langSwitch"><a id="langRu" class="active" href="./">RU</a><a id="langEn" href="./en/">EN</a></div><button id="homeBtn" class="secondary hidden" style="width:auto;min-height:40px">← Все игры</button></div></div>
 
 <section id="home">
 <div class="panel"><div class="kicker">7 playable candidates</div><h1>Семь разных причин сказать «ещё раунд»</h1><p class="muted">Знания · планирование · память и связи · разговор · реакция · творчество · социальная дедукция.</p><p class="muted small">Публичный playtest: без регистрации, без рекламы, без записи экрана. После игры можно оставить короткий анонимный отзыв.</p></div>
@@ -205,7 +205,7 @@ function attribution(){
 }
 const TW_ATTR=attribution();
 function phCapture(event,properties){
-  const body={api_key:PH_TOKEN,event:event,properties:Object.assign({distinct_id:anonId(),'$process_person_profile':false,prototype_version:'1.3-feedback'},TW_ATTR,properties||{})};
+  const body={api_key:PH_TOKEN,event:event,properties:Object.assign({distinct_id:anonId(),'$process_person_profile':false,prototype_version:'1.3.1-feedback'},TW_ATTR,properties||{})};
   try{return fetch(PH_HOST+'/i/v0/e/',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),keepalive:true,credentials:'omit'}).catch(()=>{})}catch(e){}
 }
 function analyticsStart(game,props){
@@ -377,7 +377,7 @@ $('#cShowWord').onclick=()=>{$('#cShowWord').classList.add('hidden');$('#cWordBo
 function cShared(){$('#cPrivate').classList.add('hidden');$('#cCheck').classList.add('hidden');$('#cRoundEnd').classList.add('hidden');$('#cShared').classList.remove('hidden');$('#cSharedTitle').textContent=`Секрет начинается на «${cPrefix()}…»`;$('#cGuessInput').value='';$('#cGuessMsg').textContent='';cHead()}
 $('#cContactBtn').onclick=()=>{$('#cShared').classList.add('hidden');$('#cCheck').classList.remove('hidden');$('#cCheckResult').classList.add('hidden');let n=3;$('#cCount').textContent=n;const id=every(()=>{n--;$('#cCount').textContent=n>0?n:'0';if(n<=0){clearInterval(id);intervals.delete(id);later(()=>{$('#cRevealCandidate').textContent=cCandidate;$('#cCheckResult').classList.remove('hidden')},250)}},650)};
 $('#cYes').onclick=()=>{cContacts++;cPrefixLen=Math.min(cPrefixLen+1,cSecret().length-1);cClue=(cClue+1)%cN;cPrepare()};$('#cNo').onclick=()=>{cClue=(cClue+1)%cN;cPrepare()};$('#cNoContact').onclick=()=>{cClue=(cClue+1)%cN;cPrepare()};
-$('#cHintBtn').onclick=()=>{if(cPrefixLen<cSecret().length-1){cPrefixLen++;cHints++;cShared()}else cSolve(false)};
+$('#cHintBtn').onclick=()=>{if(cPrefixLen<cSecret().length-1){cPrefixLen++;cHints++;cPrepare()}else cSolve(false)};
 function norm(s){return s.trim().toUpperCase().replace(/Ё/g,'Е')}$('#cGuessBtn').onclick=()=>{if(norm($('#cGuessInput').value)===norm(cSecret())){cSolved++;cSolve(true)}else $('#cGuessMsg').textContent='Не оно. Игра продолжается.'};
 function cSolve(ok){$('#cPrivate').classList.add('hidden');$('#cShared').classList.add('hidden');$('#cCheck').classList.add('hidden');$('#cRoundEnd').classList.remove('hidden');$('#cSecretReveal').textContent=cSecret();$('#cNext').textContent=cRound===cRounds-1?'Итог':'Следующий секрет'}
 $('#cNext').onclick=()=>{if(cRound===cRounds-1)return cFinish();cRound++;cPrefixLen=1;cClue=(cClue+1)%cN;cLast='';cPrepare()};
