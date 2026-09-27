@@ -1,178 +1,101 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<meta name="theme-color" content="#f7f5ef" />
-<title>TimeWhim — Tester Build</title>
-<style>
-:root{--bg:#f7f5ef;--ink:#171714;--muted:#77756e;--line:#dedbd2;--panel:#fffdf8;--accent:#6558d3;--accent2:#ef7a5a;--ok:#2b8a6e;--r:26px;--shadow:0 20px 60px rgba(31,27,18,.08)}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}body{min-height:100vh}.app{width:min(100%,560px);min-height:100vh;margin:auto;padding:22px 20px 34px}.top{display:flex;align-items:center;justify-content:space-between;height:44px}.brand{font-weight:800;letter-spacing:-.04em;font-size:22px}.tester-pill{border:1px solid var(--line);background:rgba(255,255,255,.6);padding:8px 11px;border-radius:999px;font-size:12px;color:var(--muted)}.screen{display:none;animation:in .28s ease both}.screen.active{display:block}@keyframes in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}h1{font-size:clamp(36px,9vw,58px);line-height:.98;letter-spacing:-.065em;margin:30px 0 16px}h2{font-size:32px;line-height:1.02;letter-spacing:-.045em;margin:28px 0 12px}p{line-height:1.55;color:var(--muted)}.hero{padding-top:8vh}.kicker{font-size:13px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}button{font:inherit}.primary,.secondary,.choice,.chip,.text-btn{border:0;cursor:pointer}.primary{width:100%;padding:17px 18px;border-radius:18px;background:var(--ink);color:white;font-weight:750;font-size:16px;margin-top:18px}.primary:disabled{opacity:.38;cursor:not-allowed}.secondary{width:100%;padding:15px;border-radius:18px;background:transparent;border:1px solid var(--line);font-weight:700;margin-top:10px}.choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0}.choice{min-height:68px;padding:15px;border-radius:20px;background:var(--panel);border:1px solid var(--line);text-align:left;font-weight:700;box-shadow:none;transition:.18s ease}.choice small{display:block;margin-top:4px;color:var(--muted);font-weight:500}.choice.selected{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink);transform:translateY(-1px)}.chips{display:flex;flex-wrap:wrap;gap:9px;margin:20px 0}.chip{padding:12px 14px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-weight:650}.chip.selected{background:var(--ink);color:white;border-color:var(--ink)}.ring-wrap{display:grid;place-items:center;margin:26px 0}.ring{--p:68;position:relative;width:220px;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--accent) calc(var(--p)*1%),#e7e3da 0)}.ring:after{content:"";position:absolute;inset:15px;border-radius:50%;background:var(--bg)}.ring-inner{position:relative;z-index:1;text-align:center}.ring-number{font-size:64px;font-weight:800;letter-spacing:-.07em;line-height:.9}.ring-unit{color:var(--muted);margin-top:8px}.time-slider{width:100%;accent-color:var(--ink)}.nav-row{display:flex;gap:10px;margin-top:18px}.nav-row>*{flex:1}.preset{padding:18px;border-radius:22px;background:var(--panel);border:1px solid var(--line);margin:10px 0;cursor:pointer}.preset strong{font-size:18px}.preset div{font-size:13px;color:var(--muted);margin-top:6px}.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--shadow)}.session-summary{text-align:center}.tiny{font-size:12px;color:var(--muted)}.timeline{margin:22px 0}.timeline-row{display:grid;grid-template-columns:32px 1fr auto;gap:10px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line)}.timeline-row:last-child{border-bottom:0}.dot{width:10px;height:10px;border-radius:50%;background:var(--accent);margin:auto}.activity-type{text-transform:uppercase;letter-spacing:.1em;font-size:11px;color:var(--muted)}.activity-title{font-size:17px;font-weight:750;margin-top:3px}.duration{font-weight:750}.activity-shell{padding-top:18px}.remaining{font-size:13px;color:var(--muted);text-align:center}.activity-card{min-height:390px;margin:18px 0;padding:26px;border-radius:32px;background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow);display:flex;flex-direction:column;justify-content:center;text-align:center}.activity-card h2{font-size:38px;margin:8px 0 14px}.activity-card p{font-size:16px}.controls{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.controls button{padding:12px 6px;border:1px solid var(--line);background:var(--panel);border-radius:15px;font-size:12px;font-weight:700}.next-btn{margin-top:12px}.sheet{position:fixed;inset:0;background:rgba(0,0,0,.25);display:none;align-items:flex-end;z-index:10}.sheet.open{display:flex}.sheet-panel{width:min(100%,560px);margin:auto;background:var(--bg);border-radius:30px 30px 0 0;padding:24px 20px 32px}.sheet-panel h3{margin:0 0 14px;font-size:24px}.sheet-panel button{width:100%;text-align:left;padding:14px 0;border:0;border-bottom:1px solid var(--line);background:none;font-weight:700}.feedback-row{display:flex;gap:8px;margin:12px 0}.feedback-row button{flex:1;padding:12px 8px;border-radius:15px;border:1px solid var(--line);background:var(--panel);font-weight:700}.feedback-row button.selected{background:var(--ink);color:white}textarea,input[type=text]{width:100%;border:1px solid var(--line);background:var(--panel);border-radius:16px;padding:14px;font:inherit;outline:none}textarea{min-height:92px;resize:vertical}.question{margin:20px 0}.question label{display:block;font-weight:750;margin-bottom:8px}.progress{height:5px;background:#e5e1d8;border-radius:999px;overflow:hidden;margin-top:8px}.progress>i{display:block;height:100%;background:var(--ink);width:0;transition:.25s}.notice{padding:13px 14px;border:1px dashed var(--line);border-radius:16px;color:var(--muted);font-size:13px;margin:14px 0}.success{color:var(--ok)}.text-btn{background:none;padding:8px 0;color:var(--muted);text-decoration:underline}.footer-note{text-align:center;font-size:12px;color:var(--muted);margin-top:20px}@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}@media(max-width:380px){.app{padding-left:14px;padding-right:14px}.ring{width:196px}.activity-card{min-height:340px}.controls{grid-template-columns:1fr 1fr}}
-</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f7f5ef">
+<title>TimeWhim — Interactive Tester</title>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div class="app">
-  <div class="top"><div class="brand">TimeWhim</div><div class="tester-pill" id="testerBadge">v0.4 · Tester</div></div>
+<main class="app">
+  <header class="top"><div class="brand">TimeWhim</div><div class="badge">v0.5 · Interactive</div></header>
   <div class="progress"><i id="progressBar"></i></div>
 
   <section class="screen active hero" data-screen="welcome">
     <div class="kicker">A small experiment for free time</div>
     <h1>Turn free time into something worth remembering.</h1>
-    <p>Tell us how much time you have. We’ll build the rest.</p>
-    <button class="primary" onclick="show('tester')">Get Started</button>
-    <div class="footer-note">No account · No ads · No data upload</div>
+    <p>Tell us how much time you have. We’ll build a small session you can actually do.</p>
+    <button class="primary" id="getStarted">Get Started</button>
+    <div class="footer-note">No account · No ads · Tester data stays on this device until export</div>
   </section>
 
   <section class="screen" data-screen="tester">
-    <h2>Tester mode</h2>
-    <p>Pick a situation. Then use TimeWhim without trying to “test correctly.” There are no right answers.</p>
-    <div class="preset" onclick="applyPreset('natural')"><strong>Natural</strong><div>30 min · Solo · Curious</div></div>
-    <div class="preset" onclick="applyPreset('social')"><strong>Social</strong><div>45 min · Two · Fun · Quiet</div></div>
-    <div class="preset" onclick="applyPreset('travel')"><strong>Travel</strong><div>2h 30m · Solo · Chill · Offline + Low battery</div></div>
-    <button class="secondary" onclick="show('time')">Choose freely instead</button>
+    <h2>Tester mode</h2><p>Pick a situation, then use the product naturally.</p>
+    <div class="preset" data-preset="natural"><strong>Natural</strong><div>30 min · Solo · Curious</div></div>
+    <div class="preset" data-preset="social"><strong>Social</strong><div>45 min · Two · Fun · Quiet</div></div>
+    <div class="preset" data-preset="travel"><strong>Travel</strong><div>2h 30m · Solo · Chill · Offline + Low battery</div></div>
+    <button class="secondary" id="chooseFreely">Choose freely instead</button>
   </section>
 
   <section class="screen" data-screen="time">
     <h2>How much time do you have?</h2>
-    <div class="ring-wrap"><div class="ring" id="timeRing" style="--p:25"><div class="ring-inner"><div class="ring-number" id="timeNumber">30</div><div class="ring-unit" id="timeUnit">minutes</div></div></div></div>
-    <div class="chips" id="timeChips">
-      <button class="chip" data-min="10">10 min</button><button class="chip selected" data-min="30">30 min</button><button class="chip" data-min="60">1 hour</button><button class="chip" id="customChip">Custom</button>
-    </div>
-    <input class="time-slider" id="timeSlider" type="range" min="5" max="720" step="5" value="30" aria-label="Session duration" />
-    <button class="primary" onclick="show('people')">Continue</button>
+    <div class="ring-wrap"><div class="ring" id="timeRing"><div class="ring-inner"><div class="ring-number" id="timeNumber">30</div><div class="ring-unit" id="timeUnit">minutes</div></div></div></div>
+    <div class="chips"><button class="chip" data-min="10">10 min</button><button class="chip selected" data-min="30">30 min</button><button class="chip" data-min="60">1 hour</button></div>
+    <input class="slider" id="timeSlider" type="range" min="5" max="720" step="5" value="30" aria-label="Session duration">
+    <button class="primary" id="timeNext">Continue</button>
   </section>
 
   <section class="screen" data-screen="people">
-    <h2>Who’s here?</h2><p>Enough detail to build the session. No names needed.</p>
+    <h2>Who’s here?</h2><p>Enough detail to choose activities. No names needed.</p>
     <div class="choice-grid" id="peopleChoices">
-      <button class="choice" data-v="solo">Just me<small>One-person activities</small></button>
+      <button class="choice" data-v="solo">Just me<small>Solo activities</small></button>
       <button class="choice" data-v="two">Two of us<small>One phone, together</small></button>
       <button class="choice" data-v="group">Group<small>3 or more</small></button>
     </div>
     <div class="chips" id="groupSize" style="display:none"><button class="chip" data-v="3-5">3–5</button><button class="chip" data-v="6+">6+</button></div>
-    <button class="primary" id="peopleNext" disabled onclick="show('mood')">Continue</button>
+    <button class="primary" id="peopleNext" disabled>Continue</button>
   </section>
 
   <section class="screen" data-screen="mood">
     <h2>What kind of time?</h2>
-    <div class="choice-grid" id="moodChoices">
-      <button class="choice" data-v="fun">Fun</button><button class="choice" data-v="curious">Curious</button><button class="choice" data-v="chill">Chill</button><button class="choice" data-v="connect">Connect</button>
-    </div>
-    <button class="secondary" onclick="chooseMood('surprise')">Surprise me</button>
-    <button class="primary" id="moodNext" disabled onclick="show('constraints')">Continue</button>
+    <div class="choice-grid" id="moodChoices"><button class="choice" data-v="fun">Fun</button><button class="choice" data-v="curious">Curious</button><button class="choice" data-v="chill">Chill</button><button class="choice" data-v="connect">Connect</button></div>
+    <button class="secondary" id="surpriseMood">Surprise me</button><button class="primary" id="moodNext" disabled>Continue</button>
   </section>
 
   <section class="screen" data-screen="constraints">
     <h2>Anything to work around?</h2><p>Optional. Tap whatever matters right now.</p>
     <div class="chips" id="constraintChips"><button class="chip" data-v="quiet">Quiet</button><button class="chip" data-v="offline">Offline</button><button class="chip" data-v="battery">Low battery</button></div>
-    <button class="primary" onclick="buildSession()">Build my time</button>
+    <button class="primary" id="buildBtn">Build my time</button>
   </section>
 
   <section class="screen" data-screen="preview">
-    <div class="session-summary"><div class="ring-wrap"><div class="ring" id="previewRing" style="--p:100"><div class="ring-inner"><div class="ring-number" id="previewMinutes">45</div><div class="ring-unit">minutes built</div></div></div></div><div class="tiny" id="previewMeta"></div></div>
-    <div class="card timeline" id="timeline"></div>
-    <button class="primary" onclick="startSession()">Start Session</button><button class="secondary" onclick="mixAgain()">Mix again</button>
+    <div class="ring-wrap"><div class="ring" style="--p:100"><div class="ring-inner"><div class="ring-number" id="previewMinutes">0</div><div class="ring-unit">minutes built</div></div></div></div>
+    <div class="footer-note" id="previewMeta"></div><div class="card timeline" id="timeline"></div>
+    <button class="primary" id="startBtn">Start Session</button><button class="secondary" id="mixBtn">Mix again</button>
   </section>
 
-  <section class="screen activity-shell" data-screen="activity">
-    <div class="remaining" id="remainingText">27 min left</div>
-    <div class="activity-card"><div class="activity-type" id="activityType">QUICK</div><h2 id="activityTitle">Odd One</h2><p id="activityPrompt"></p><div class="tiny" id="activityDuration"></div></div>
-    <div class="controls"><button onclick="swapActivity()">Swap</button><button onclick="shorter()">Shorter</button><button onclick="openSheet('moodSheet')">Mood</button><button onclick="openSheet('moreSheet')">More</button></div>
-    <button class="primary next-btn" onclick="completeActivity()">Done · Next</button>
+  <section class="screen" data-screen="activity">
+    <div class="remaining" id="remainingText"></div>
+    <article class="activity-card">
+      <div class="activity-head"><div class="meta" id="activityType"></div><h2 id="activityTitle"></h2><p id="activityPrompt"></p><div class="footer-note" id="activityDuration"></div></div>
+      <div class="action" id="actionArea"></div>
+    </article>
+    <div class="controls"><button class="control" id="swapBtn">Swap</button><button class="control" id="shorterBtn">Shorter</button><button class="control" id="moodBtn">Mood</button><button class="control" id="moreBtn">More</button></div>
+    <button class="primary" id="doneNext">Done · Next</button>
   </section>
 
   <section class="screen" data-screen="complete">
-    <div class="hero"><div class="kicker success">Session complete</div><h1>Time well spent.</h1><p><strong id="doneMinutes">0 min</strong> · <span id="doneCount">0 activities</span></p></div>
-    <div class="question"><label>How did this feel?</label><div class="feedback-row" data-key="feel"><button>Not for me</button><button>Good</button><button>Great</button></div></div>
-    <div class="question"><label>Again sometime?</label><div class="feedback-row" data-key="again"><button>Yes</button><button>Maybe</button><button>No</button></div></div>
-    <button class="primary" onclick="show('feedback')">Finish tester feedback</button><button class="secondary" onclick="resetApp()">Start another</button>
+    <div class="hero"><div class="kicker">Session complete</div><h1>Time well spent.</h1><p><strong id="doneMinutes">0 min</strong> · <span id="doneCount">0 activities</span></p></div>
+    <div class="question"><h3>How did this feel?</h3><div class="feedback-row" data-key="feel"><button>Not for me</button><button>Good</button><button>Great</button></div></div>
+    <div class="question"><h3>Again sometime?</h3><div class="feedback-row" data-key="again"><button>Yes</button><button>Maybe</button><button>No</button></div></div>
+    <button class="primary" id="toFeedback">Finish tester feedback</button><button class="secondary" id="restartBtn">Start another</button>
   </section>
 
   <section class="screen" data-screen="feedback">
-    <h2>One last minute.</h2><p>This stays on your device until you export it. Nothing is sent automatically.</p>
-    <div class="question"><label>What do you think this product does?</label><textarea data-field="productMeaning"></textarea></div>
-    <div class="question"><label>What was unclear?</label><textarea data-field="unclear"></textarea></div>
-    <div class="question"><label>What would you normally use instead?</label><input type="text" data-field="alternative" /></div>
-    <div class="question"><label>When would you realistically use TimeWhim?</label><textarea data-field="realUse"></textarea></div>
-    <div class="question"><label>Would you pay ₩4,900 one time?</label><div class="feedback-row" data-key="pay"><button>Yes</button><button>Maybe</button><button>No</button></div></div>
-    <div class="notice">The export contains tester choices and interaction timings, but no account, name, email, location, or device identifier.</div>
-    <button class="primary" onclick="exportReport()">Export anonymous JSON</button><button class="secondary" onclick="resetApp()">Done</button>
+    <h2>One last minute.</h2><p>Nothing is sent automatically.</p>
+    <div class="question"><h3>What do you think this product does?</h3><textarea data-field="productMeaning"></textarea></div>
+    <div class="question"><h3>What was unclear?</h3><textarea data-field="unclear"></textarea></div>
+    <div class="question"><h3>What would you normally use instead?</h3><input type="text" data-field="alternative"></div>
+    <div class="question"><h3>When would you realistically use TimeWhim?</h3><textarea data-field="realUse"></textarea></div>
+    <div class="question"><h3>Would you pay ₩4,900 one time?</h3><div class="feedback-row" data-key="pay"><button>Yes</button><button>Maybe</button><button>No</button></div></div>
+    <div class="notice">Export includes interaction timings and tester choices, but no account, name, email, location, or device identifier.</div>
+    <button class="primary" id="exportBtn">Export anonymous JSON</button><button class="secondary" id="feedbackDone">Done</button>
   </section>
-</div>
+</main>
 
-<div class="sheet" id="moodSheet" onclick="backdrop(event,'moodSheet')"><div class="sheet-panel"><h3>Change the mood</h3><button onclick="replanMood('fun')">More energy</button><button onclick="replanMood('chill')">I’m tired</button><button onclick="replanMood('connect')">More connection</button><button onclick="replanMood('curious')">Make me think</button><button onclick="closeSheet('moodSheet')">Cancel</button></div></div>
-<div class="sheet" id="moreSheet" onclick="backdrop(event,'moreSheet')"><div class="sheet-panel"><h3>What changed?</h3><button onclick="peopleChanged()">We’re more people</button><button onclick="quietNow()">Quiet now</button><button onclick="lessTime()">I have less time</button><button onclick="finishMyTime()">Finish my time</button><button onclick="closeSheet('moreSheet')">Cancel</button></div></div>
-
-<script>
-const activities=[
-{id:'q1',type:'Quick',title:'Odd One',min:4,moods:['fun','curious'],people:['solo','two','group'],quiet:true,offline:true,battery:true,prompt:'Pick the odd one out — not by category, but by the strangest rule you can justify: moon · mirror · window · lake.'},
-{id:'q2',type:'Quick',title:'Pattern Snap',min:5,moods:['curious'],people:['solo','two','group'],quiet:true,offline:true,battery:true,prompt:'Complete this pattern without searching: 2, 6, 12, 20, 30… Then invent a different rule that also fits the first three terms.'},
-{id:'q3',type:'Quick',title:'Five Tiny Wins',min:5,moods:['chill'],people:['solo'],quiet:true,offline:true,battery:true,prompt:'Name five small things that went better than expected this week. Tiny counts.'},
-{id:'q4',type:'Quick',title:'Fast Trivia',min:6,moods:['fun','curious'],people:['solo','two','group'],quiet:true,offline:true,battery:true,prompt:'Take turns answering without looking anything up: largest ocean, closest planet to the Sun, number of bones in an adult human, capital of Canada.'},
-{id:'q5',type:'Quick',title:'Object Remix',min:5,moods:['fun','curious'],people:['solo','two','group'],quiet:true,offline:true,battery:true,prompt:'Choose one object near you. Come up with three absurd but technically possible alternative uses for it.'},
-{id:'q6',type:'Quick',title:'Memory Map',min:6,moods:['curious','chill'],people:['solo'],quiet:true,offline:true,battery:true,prompt:'Close your eyes and mentally walk through a familiar room. List ten objects in spatial order before checking.'},
-{id:'q7',type:'Quick',title:'Ten-Second Categories',min:5,moods:['fun'],people:['two','group'],quiet:false,offline:true,battery:true,prompt:'Take turns naming 5 things in a category within ten seconds: cities, foods, films, animals, things that are blue.'},
-{id:'q8',type:'Quick',title:'Tiny Debate',min:7,moods:['fun','connect','curious'],people:['two','group'],quiet:true,offline:true,battery:true,prompt:'Defend one harmless opinion you do not actually hold for 60 seconds. Switch sides.'},
-{id:'q9',type:'Quick',title:'Three Clues',min:5,moods:['fun','connect'],people:['two','group'],quiet:true,offline:true,battery:true,prompt:'Think of a place you know. Give exactly three clues. Others guess. Hard mode: no proper nouns.'},
-{id:'q10',type:'Quick',title:'One-Minute Story',min:4,moods:['fun'],people:['solo','two','group'],quiet:true,offline:true,battery:true,prompt:'Tell a story that includes a key, a train, and something unexpectedly orange. Stop when the minute ends.'},
-{id:'q11',type:'Quick',title:'Future Headline',min:5,moods:['curious','chill'],people:['solo','two','group'],quiet:true,offline:true,battery:true,prompt:'Write a newspaper headline from your life one year from now. What happened just before it?'},
-{id:'q12',type:'Quick',title:'Reverse Bucket List',min:6,moods:['chill','connect'],people:['solo','two','group'],quiet:true,offline:true,battery:true,prompt:'List three things you already did that your younger self would have put on a bucket list.'},
-{id:'t1',type:'Together',title:'Pass the Phone',min:8,moods:['fun','connect'],people:['two','group'],quiet:true,offline:true,battery:true,prompt:'Pass the phone. Each person writes one sentence beginning “I think you’d be surprisingly good at…” Then reveal together.'},
-{id:'t2',type:'Together',title:'Guess & Reveal',min:8,moods:['fun','connect'],people:['two','group'],quiet:true,offline:true,battery:true,prompt:'Each person guesses the other’s answer first: perfect lazy Sunday, dream breakfast, most rewatchable movie.'},
-{id:'t3',type:'Together',title:'Quick Duel',min:7,moods:['fun'],people:['two','group'],quiet:false,offline:true,battery:true,prompt:'Best of five: rock-paper-scissors, thumb war, fastest alphabet backwards attempt, coin guess, silent staring contest.'},
-{id:'t4',type:'Together',title:'Unexpected Question',min:9,moods:['connect','curious'],people:['two','group'],quiet:true,offline:true,battery:true,prompt:'What belief or taste of yours changed completely in the last five years? What caused it?'},
-{id:'t5',type:'Together',title:'Same Memory?',min:10,moods:['connect'],people:['two','group'],quiet:true,offline:true,battery:true,prompt:'Pick one shared day. Separately describe the first three details you remember. Compare where your memories diverge.'},
-{id:'t6',type:'Together',title:'Two Truths, One Tiny Lie',min:9,moods:['fun','connect'],people:['two','group'],quiet:true,offline:true,battery:true,prompt:'Use only mundane facts from the last seven days. Make the lie believable.'},
-{id:'t7',type:'Together',title:'Rank It Blind',min:10,moods:['fun'],people:['two','group'],quiet:true,offline:true,battery:true,prompt:'One person gives five mystery items one by one. The other must permanently place each from 1–5 before hearing the next.'},
-{id:'t8',type:'Together',title:'Plan a Ridiculous Day',min:12,moods:['fun','connect'],people:['two','group'],quiet:true,offline:true,battery:true,prompt:'You have one day, no responsibilities, and a silly imaginary budget. Build the most memorable schedule possible.'},
-{id:'t9',type:'Together',title:'Compliment With Evidence',min:8,moods:['connect'],people:['two','group'],quiet:true,offline:true,battery:true,prompt:'Say one thing you genuinely appreciate about each person — but include a specific example, not a generic compliment.'},
-{id:'t10',type:'Together',title:'Question Relay',min:11,moods:['connect','curious'],people:['two','group'],quiet:true,offline:true,battery:true,prompt:'Answer a question, then your answer must inspire the next question. Keep the chain going for ten turns.'},
-{id:'b1',type:'Break',title:'Notice Three Things',min:3,moods:['chill','curious'],people:['solo','two','group'],quiet:true,offline:true,battery:true,prompt:'Put the phone down. Look around and find three details you have never consciously noticed before.'},
-{id:'b2',type:'Break',title:'Window Reset',min:5,moods:['chill'],people:['solo','two','group'],quiet:true,offline:true,battery:true,prompt:'No phone for five minutes. Look outside or into the distance. Let your eyes stop focusing on close objects.'},
-{id:'b3',type:'Break',title:'Tiny Walk',min:7,moods:['chill','fun'],people:['solo','two','group'],quiet:false,offline:true,battery:true,prompt:'Leave the phone in your pocket and walk until you notice something worth remembering.'},
-{id:'b4',type:'Break',title:'One Song, Nothing Else',min:5,moods:['chill'],people:['solo','two','group'],quiet:true,offline:true,battery:true,prompt:'Play one song you already have. No scrolling while it plays. Just listen.'},
-{id:'b5',type:'Break',title:'Future Trip',min:6,moods:['connect','chill'],people:['two','group'],quiet:true,offline:true,battery:true,prompt:'Put the phone face down. Everyone names one place they would travel tomorrow if money and logistics disappeared.'},
-{id:'b6',type:'Break',title:'Water + Stretch',min:4,moods:['chill'],people:['solo','two','group'],quiet:true,offline:true,battery:true,prompt:'Phone down. Drink some water and stretch whatever feels stiff. No productivity goal.'},
-{id:'b7',type:'Break',title:'Silent Minute × 3',min:3,moods:['chill'],people:['solo','two','group'],quiet:true,offline:true,battery:true,prompt:'Three quiet minutes. Do nothing on purpose. Notice what your mind tries to reach for.'},
-{id:'b8',type:'Break',title:'Screen-Free Choice',min:10,moods:['chill','connect'],people:['solo','two','group'],quiet:true,offline:true,battery:true,prompt:'Choose your own ten-minute offline thing: tea, shower, balcony, doodle, stretch, conversation. TimeWhim stays out of the way.'},
-{id:'m1',type:'Mystery',title:'The Missing Necklace',min:15,moods:['curious','fun'],people:['solo','two','group'],quiet:true,offline:true,battery:true,prompt:'A necklace vanished from Room 214 between 18:10 and 18:25. Clues: the balcony door was locked from inside; wet shoe marks stop before the carpet; the cleaner logged out at 18:12; the guest next door heard a service cart at 18:18. Suspects: the cleaner, the guest’s friend, the night porter. Decide what clue matters most, what could be staged, and who had the best opportunity. Commit to a theory before you reveal your reasoning to each other.'}
-];
-let state={time:30,people:null,groupSize:null,mood:null,constraints:new Set(),session:[],index:0,completed:[],startedAt:null,preset:null,feedback:{},events:[],buildAt:null,startAt:null};
-const screens=['welcome','tester','time','people','mood','constraints','preview','activity','complete','feedback'];
-function event(name,data={}){state.events.push({name,t:Date.now(),...data});saveLocal()}
-function saveLocal(){localStorage.setItem('timewhim-v04-session',JSON.stringify({...state,constraints:[...state.constraints]}))}
-function show(name){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.dataset.screen===name));document.getElementById('progressBar').style.width=((screens.indexOf(name))/(screens.length-1)*100)+'%';window.scrollTo({top:0,behavior:'smooth'});event('screen_view',{screen:name})}
-function applyPreset(name){state.preset=name;if(name==='natural'){state.time=30;state.people='solo';state.mood='curious';state.constraints=new Set()}if(name==='social'){state.time=45;state.people='two';state.mood='fun';state.constraints=new Set(['quiet'])}if(name==='travel'){state.time=150;state.people='solo';state.mood='chill';state.constraints=new Set(['offline','battery'])}syncUI();event('preset_selected',{preset:name});show('constraints')}
-function syncUI(){document.getElementById('timeSlider').value=state.time;renderTime();document.querySelectorAll('#peopleChoices .choice').forEach(b=>b.classList.toggle('selected',b.dataset.v===state.people));document.querySelectorAll('#moodChoices .choice').forEach(b=>b.classList.toggle('selected',b.dataset.v===state.mood));document.querySelectorAll('#constraintChips .chip').forEach(b=>b.classList.toggle('selected',state.constraints.has(b.dataset.v)))}
-function renderTime(){let m=state.time;document.getElementById('timeNumber').textContent=m>=60?(m/60>=2?Math.floor(m/60)+'h':m===60?'1':'1h '+(m%60)):m;document.getElementById('timeUnit').textContent=m>=60?(m%60?m%60+' min':'available'):'minutes';document.getElementById('timeRing').style.setProperty('--p',Math.max(5,Math.min(100,m/180*100)))}
-document.querySelectorAll('#timeChips [data-min]').forEach(b=>b.onclick=()=>{state.time=+b.dataset.min;document.querySelectorAll('#timeChips .chip').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');document.getElementById('timeSlider').value=state.time;renderTime();event('time_selected',{minutes:state.time})});
-document.getElementById('customChip').onclick=()=>{document.querySelectorAll('#timeChips .chip').forEach(x=>x.classList.remove('selected'));document.getElementById('customChip').classList.add('selected');document.getElementById('timeSlider').focus()};
-document.getElementById('timeSlider').oninput=e=>{state.time=+e.target.value;renderTime()};document.getElementById('timeSlider').onchange=()=>event('time_selected',{minutes:state.time,custom:true});
-document.querySelectorAll('#peopleChoices .choice').forEach(b=>b.onclick=()=>{state.people=b.dataset.v;document.querySelectorAll('#peopleChoices .choice').forEach(x=>x.classList.toggle('selected',x===b));document.getElementById('groupSize').style.display=state.people==='group'?'flex':'none';document.getElementById('peopleNext').disabled=false;event('people_selected',{people:state.people})});
-document.querySelectorAll('#groupSize .chip').forEach(b=>b.onclick=()=>{state.groupSize=b.dataset.v;document.querySelectorAll('#groupSize .chip').forEach(x=>x.classList.toggle('selected',x===b))});
-document.querySelectorAll('#moodChoices .choice').forEach(b=>b.onclick=()=>chooseMood(b.dataset.v));function chooseMood(v){state.mood=v==='surprise'?['fun','curious','chill','connect'][Math.floor(Math.random()*4)]:v;document.querySelectorAll('#moodChoices .choice').forEach(x=>x.classList.toggle('selected',x.dataset.v===state.mood));document.getElementById('moodNext').disabled=false;event('mood_selected',{mood:state.mood,surprise:v==='surprise'})}
-document.querySelectorAll('#constraintChips .chip').forEach(b=>b.onclick=()=>{let v=b.dataset.v;state.constraints.has(v)?state.constraints.delete(v):state.constraints.add(v);b.classList.toggle('selected');event('constraint_toggled',{constraint:v,on:state.constraints.has(v)})});
-function eligible(a){if(!a.people.includes(state.people))return false;if(state.constraints.has('quiet')&&!a.quiet)return false;if(state.constraints.has('offline')&&!a.offline)return false;if(state.constraints.has('battery')&&!a.battery)return false;return true}
-function score(a,remaining,lastType){let s=0;if(a.moods.includes(state.mood))s+=6;if(a.min<=remaining)s+=4;else s-=20;if(!state.completed.includes(a.id))s+=3;if(lastType&&lastType!==a.type)s+=2;s+=Math.random()*2;return s}
-function compose(total){let remaining=total,out=[],lastType=null,safety=0;while(remaining>=3&&out.length<8&&safety++<30){let pool=activities.filter(eligible).filter(a=>a.min<=remaining).filter(a=>!out.some(x=>x.id===a.id));if(!pool.length)break;pool.sort((a,b)=>score(b,remaining,lastType)-score(a,remaining,lastType));let pick=pool[0];out.push(pick);remaining-=pick.min;lastType=pick.type;if(total>=90&&out.length===3&&remaining>=25){out.push({id:'mytime-'+Date.now(),type:'My time',title:'Your own time',min:Math.min(45,remaining-10),moods:['chill'],people:[state.people],quiet:true,offline:true,battery:true,prompt:'Use this block for your own downloaded film, book, music, nap, view, or anything you already wanted to do.'});remaining-=out[out.length-1].min;lastType='My time'}}return out}
-function buildSession(){state.buildAt=Date.now();if(!state.people)state.people='solo';if(!state.mood)state.mood='curious';state.session=compose(state.time);state.index=0;event('build_my_time',{minutes:state.time,timeToBuildMs:state.startedAt?Date.now()-state.startedAt:null});renderPreview();show('preview')}
-function renderPreview(){let total=state.session.reduce((n,a)=>n+a.min,0);document.getElementById('previewMinutes').textContent=total;document.getElementById('previewMeta').textContent=`Built for ${state.people==='two'?'2':state.people==='group'?(state.groupSize||'group'):'1'} · ${cap(state.mood)}${state.constraints.size?' · '+[...state.constraints].map(cap).join(' · '):''}`;document.getElementById('timeline').innerHTML=state.session.map(a=>`<div class="timeline-row"><div class="dot"></div><div><div class="activity-type">${a.type}</div><div class="activity-title">${a.title}</div></div><div class="duration">${a.min}m</div></div>`).join('')}
-function mixAgain(){state.session=compose(state.time);event('mix_again');renderPreview()}
-function startSession(){state.startAt=Date.now();state.index=0;state.completed=[];event('start_session',{timeToStartMs:state.buildAt?Date.now()-state.buildAt:null});renderActivity();show('activity')}
-function renderActivity(){if(state.index>=state.session.length)return finishSession();let a=state.session[state.index];let left=state.session.slice(state.index).reduce((n,x)=>n+x.min,0);document.getElementById('remainingText').textContent=left+' min left';document.getElementById('activityType').textContent=a.type.toUpperCase();document.getElementById('activityTitle').textContent=a.title;document.getElementById('activityPrompt').textContent=a.prompt;document.getElementById('activityDuration').textContent=a.min+' minutes';event('activity_view',{activityId:a.id,index:state.index});if(state.index===1)event('reached_second_activity')}
-function completeActivity(){let a=state.session[state.index];state.completed.push(a.id);event('activity_complete',{activityId:a.id});state.index++;renderActivity()}
-function swapActivity(){let old=state.session[state.index],remaining=old.min+2;let candidates=activities.filter(eligible).filter(a=>a.id!==old.id&&a.min<=remaining).sort((a,b)=>score(b,remaining,old.type)-score(a,remaining,old.type));if(candidates[0])state.session[state.index]=candidates[0];event('swap_used',{from:old.id,to:state.session[state.index].id});renderActivity()}
-function shorter(){let old=state.session[state.index];let candidates=activities.filter(eligible).filter(a=>a.id!==old.id&&a.min<old.min).sort((a,b)=>a.min-b.min);if(candidates[0])state.session[state.index]=candidates[0];event('shorter_used',{from:old.id,to:state.session[state.index].id});renderActivity()}
-function replanRemaining(reason){let elapsed=state.session.slice(0,state.index).reduce((n,a)=>n+a.min,0);let remaining=Math.max(5,state.time-elapsed);state.session=[...state.session.slice(0,state.index),...compose(remaining)];event('replan_used',{reason,remaining});closeSheet('moodSheet');closeSheet('moreSheet');renderActivity()}
-function replanMood(m){state.mood=m;replanRemaining('mood_'+m)}function quietNow(){state.constraints.add('quiet');replanRemaining('quiet_now')}function peopleChanged(){state.people=state.people==='solo'?'two':'group';replanRemaining('people_changed')}function lessTime(){state.time=Math.max(10,Math.round(state.time*.7));replanRemaining('less_time')}
-function finishMyTime(){event('finish_my_time_used');closeSheet('moreSheet');finishSession()}
-function finishSession(){let mins=state.session.slice(0,Math.min(state.index,state.session.length)).reduce((n,a)=>n+a.min,0);document.getElementById('doneMinutes').textContent=mins+' min';document.getElementById('doneCount').textContent=state.completed.length+' activities';event('session_complete',{completedMinutes:mins,activities:state.completed.length});show('complete')}
-function openSheet(id){document.getElementById(id).classList.add('open')}function closeSheet(id){document.getElementById(id).classList.remove('open')}function backdrop(e,id){if(e.target.id===id)closeSheet(id)}
-document.querySelectorAll('.feedback-row').forEach(row=>row.querySelectorAll('button').forEach(b=>b.onclick=()=>{row.querySelectorAll('button').forEach(x=>x.classList.toggle('selected',x===b));state.feedback[row.dataset.key]=b.textContent;event('feedback_choice',{key:row.dataset.key,value:b.textContent})}));
-function exportReport(){document.querySelectorAll('[data-field]').forEach(el=>state.feedback[el.dataset.field]=el.value);let report={schema:'timewhim-tester-v0.4',exportedAt:new Date().toISOString(),preset:state.preset,setup:{timeMinutes:state.time,people:state.people,groupSize:state.groupSize,mood:state.mood,constraints:[...state.constraints]},completedActivities:state.completed,feedback:state.feedback,events:state.events.map((e,i)=>({...e,relativeMs:i?e.t-state.events[0].t:0,t:undefined}))};let blob=new Blob([JSON.stringify(report,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='timewhim-anonymous-test-'+Date.now()+'.json';a.click();URL.revokeObjectURL(url);event('report_exported')}
-function resetApp(){localStorage.removeItem('timewhim-v04-session');state={time:30,people:null,groupSize:null,mood:null,constraints:new Set(),session:[],index:0,completed:[],startedAt:Date.now(),preset:null,feedback:{},events:[],buildAt:null,startAt:null};syncUI();show('welcome')}
-function cap(s){return String(s).charAt(0).toUpperCase()+String(s).slice(1)}
-state.startedAt=Date.now();event('app_open');renderTime();
-</script>
+<dialog id="moodDialog"><h3>Change the mood</h3><button data-replan="fun">More energy</button><button data-replan="chill">I’m tired</button><button data-replan="connect">More connection</button><button data-replan="curious">Make me think</button><button data-close>Cancel</button></dialog>
+<dialog id="moreDialog"><h3>What changed?</h3><button data-replan="people">We’re more people</button><button data-replan="quiet">Quiet now</button><button data-replan="less">I have less time</button><button id="finishNow">Finish my time</button><button data-close>Cancel</button></dialog>
+<script src="app.js"></script>
 </body>
 </html>
