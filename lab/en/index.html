@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TimeWhim Mini Games Lab v1.3</title>
+<style>
+:root{--bg:#0b0e14;--panel:#141924;--card:#1b2230;--card2:#20293a;--line:#2b3548;--text:#f4f7fb;--muted:#9aa8bb;--accent:#91a8ff;--good:#52d590;--bad:#ff7777;--warn:#ffd46f;--shadow:0 18px 50px rgba(0,0,0,.28)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+body{padding:14px;padding-bottom:max(14px,env(safe-area-inset-bottom))}button,input,textarea{font:inherit}.app{max-width:900px;margin:0 auto}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.brand{font-weight:900}.version{color:var(--muted);font-size:12px}.topActions{display:flex;align-items:center;gap:8px}.langSwitch{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--card)}.langSwitch a{color:var(--muted);text-decoration:none;padding:8px 10px;font-size:12px;font-weight:900}.langSwitch a.active{background:var(--accent);color:#0c1018}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:15px}h1,h2,h3,p{margin-top:0}h1{font-size:28px;margin-bottom:8px}h2{font-size:21px;margin-bottom:10px}h3{font-size:17px;margin-bottom:8px}
+.muted{color:var(--muted)}.small{font-size:13px}.kicker{text-transform:uppercase;letter-spacing:.09em;font-size:11px;color:var(--muted);font-weight:800}.hidden{display:none!important}.center{text-align:center}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.grid{display:grid;gap:10px}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+button{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:13px;min-height:48px;padding:10px 12px;cursor:pointer;text-align:left}button:hover{border-color:#536383}
+button.primary{background:var(--accent);color:#0c1018;border-color:transparent;font-weight:900;text-align:center}button.secondary{text-align:center}button.ghost{background:transparent;text-align:center}button.active{outline:2px solid var(--accent);background:#27324b}button:disabled{opacity:.48;cursor:default}
+.badge{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:6px 10px;background:var(--card);color:var(--muted);font-size:12px}
+.gameCards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.gameCard{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px;display:flex;flex-direction:column;gap:12px;min-height:250px}.gameCard .icon{font-size:34px}.gameCard p{color:var(--muted);margin-bottom:0}.gameCard button{margin-top:auto}
+.score{font-size:19px;font-weight:900}.answer.selected{outline:2px solid var(--accent);background:#27324b}.resultGood{color:var(--good);font-weight:900}.resultBad{color:var(--bad);font-weight:900}.resultWarn{color:var(--warn);font-weight:900}
+.big{font-size:30px;font-weight:950;letter-spacing:-.02em}.heroNumber{font-size:52px;font-weight:950;text-align:center;margin:10px 0}.ruleBox{border:1px solid var(--line);background:#11151d;border-radius:14px;padding:13px;margin-top:12px}.readBox{border:1px dashed #536383;background:#111722;border-radius:15px;padding:14px;margin-top:14px}
+.progress{height:7px;background:#222938;border-radius:999px;overflow:hidden}.progress>div{height:100%;background:var(--accent);width:0%}.timerBig{font-size:42px;font-weight:950;text-align:center}.input,.textarea{width:100%;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:var(--text);padding:11px 12px}.textarea{min-height:90px;resize:vertical}
+.opGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.op{font-weight:850;text-align:center;font-size:17px}.steps{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin:16px 0}.stepBubble{min-width:58px;padding:10px;border:1px solid var(--line);border-radius:12px;text-align:center;background:var(--card)}.arrow{color:var(--muted);font-weight:900}
+.routeGrid{display:grid;grid-template-columns:repeat(5,42px);grid-template-rows:repeat(5,42px);gap:4px;justify-content:center;margin:14px 0}.routeCell{border:1px solid var(--line);border-radius:8px;background:var(--card2);display:grid;place-items:center;font-size:20px}.routeCell.start{outline:2px solid var(--accent)}.routeCell.goal{outline:2px solid var(--good)}
+.switches{display:flex;justify-content:center;gap:12px;margin:18px 0}.lamp{width:54px;height:54px;border-radius:50%;border:1px solid var(--line);background:#252b36}.lamp.on{background:var(--warn);box-shadow:0 0 18px rgba(255,212,111,.4)}
+.shapeGrid{display:grid;grid-template-columns:repeat(2,58px);grid-template-rows:repeat(2,58px);gap:5px;justify-content:center;margin:14px 0}.shapeCell{border:1px solid var(--line);border-radius:9px;background:#252b36}.shapeCell.on{background:var(--accent)}
+.matchGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;max-width:620px;margin:16px auto}.matchCard{aspect-ratio:1/1;display:grid;place-items:center;border-radius:16px;border:1px solid var(--line);background:var(--card2);font-size:20px;font-weight:900;cursor:pointer;user-select:none;padding:5px;text-align:center}.matchCard.down{font-size:24px;color:var(--muted)}.matchCard.open{outline:3px solid var(--accent)}.matchCard.matched{outline:3px solid var(--good);opacity:.42;cursor:default}
+.microStage{min-height:330px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px}.microTarget{width:84px;height:84px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:#0b0e14;font-weight:950;user-select:none}.microPad{width:min(100%,520px);height:210px;border:1px solid var(--line);border-radius:18px;background:var(--card2);position:relative;overflow:hidden}.microDot{position:absolute;width:50px;height:50px;border-radius:50%;background:var(--accent);display:grid;place-items:center;color:#0b0e14;font-weight:900;transform:translate(-50%,-50%)}.microMarker{position:absolute;width:10px;height:78px;background:var(--warn);top:calc(50% - 39px)}.centerZone{position:absolute;width:44px;height:100%;left:calc(50% - 22px);top:0;background:rgba(82,213,144,.12);border-left:1px dashed var(--good);border-right:1px dashed var(--good)}
+.holdBtn{width:180px;height:180px;border-radius:50%!important;text-align:center!important;font-weight:950!important;font-size:22px!important}.memoryGrid{display:grid;grid-template-columns:repeat(3,72px);gap:8px}.memoryCell{height:72px;border:1px solid var(--line);border-radius:12px;background:var(--card2)}
+.canvasWrap{background:#fff;border-radius:16px;overflow:hidden;border:1px solid var(--line);touch-action:none}#btCanvas{display:block;width:100%;height:320px;background:#fff;touch-action:none}.chain{display:grid;gap:10px}.chainItem{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}.chainImage{width:100%;border-radius:12px;background:white}
+.promptCard{min-height:170px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:24px;font-weight:900;padding:20px;border:1px solid var(--line);background:var(--card2);border-radius:18px}.voteGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.prefix{font-size:54px;font-weight:950;letter-spacing:.08em;text-align:center;margin:12px 0}.secretMask{letter-spacing:.16em;font-size:28px;font-weight:900}.contactWord{font-size:38px;font-weight:950;text-align:center;margin:16px 0}.contactActions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.countdown{font-size:48px;font-weight:950;text-align:center}
+.statGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center}.stat strong{display:block;font-size:22px}
+@media(max-width:680px){.gameCards,.g2,.g3,.g4,.statGrid,.contactActions,.voteGrid{grid-template-columns:1fr}.matchGrid{grid-template-columns:repeat(4,minmax(0,1fr))}.opGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.gameCard{min-height:auto}.panel{padding:15px}.heroNumber{font-size:44px}}
+
+.feedbackOverlay{position:fixed;inset:0;z-index:1000;background:rgba(5,8,12,.78);display:grid;place-items:end center;padding:14px;backdrop-filter:blur(8px)}
+.feedbackCard{width:min(100%,560px);background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:18px;box-shadow:0 24px 80px rgba(0,0,0,.5)}
+.feedbackScale{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin:8px 0 14px}.feedbackScale.binary{grid-template-columns:repeat(2,minmax(0,1fr))}
+.feedbackScale button{text-align:center;min-height:44px}.feedbackScale button.active{outline:2px solid var(--accent);background:#27324b}
+.feedbackPrivacy{font-size:12px;color:var(--muted);line-height:1.4}.feedbackActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+@media(max-width:680px){.feedbackOverlay{place-items:end center}.feedbackCard{border-radius:20px}.feedbackActions{grid-template-columns:1fr}}
+
+</style>
+</head>
+<body>
+<div class="app">
+<div class="topbar"><div><div class="brand">TimeWhim · Mini Games Lab</div><div class="version">public test v1.3 · anonymous feedback</div></div><div class="topActions"><div class="langSwitch"><a id="langRu" href="../">RU</a><a id="langEn" class="active" href="./">EN</a></div><button id="homeBtn" class="secondary hidden" style="width:auto;min-height:40px">← All games</button></div></div>
+
+<section id="home">
+<div class="panel"><div class="kicker">7 playable candidates</div><h1>Seven different reasons to say “one more round”</h1><p class="muted">Knowledge · planning · memory & connections · conversation · reflex · creativity · social deduction.</p><p class="muted small">Public playtest: no sign-up, no ads, no screen recording. After a game, you can leave a short anonymous review.</p></div>
+<div class="gameCards">
+<article class="gameCard"><div class="icon">🧠</div><div><div class="kicker">Knowledge · 2–6 min</div><h2>Confidence Duel</h2><p>Solo is a clean quiz. Duel adds confidence bets and reading your opponent.</p></div><div class="row"><span class="badge">Solo</span><span class="badge">2 players</span></div><button class="primary launch" data-game="quiz">Play</button></article>
+<article class="gameCard"><div class="icon">🧩</div><div><div class="kicker">Planning · 2–7 min</div><h2>3 Moves</h2><p>Numbers, Route, Switches и Shapes. Lock in three actions before the reveal.</p></div><div class="row"><span class="badge">Solo</span><span class="badge">2 players</span></div><button class="primary launch" data-game="moves">Play</button></article>
+<article class="gameCard"><div class="icon">🔗</div><div><div class="kicker">Memory + meaning · 2–5 min</div><h2>Match 2.0</h2><p>A timer, penalties, and three different rules: connections, sum to 10, and semantic triples.</p></div><div class="row"><span class="badge">Solo</span><span class="badge">2 players</span></div><button class="primary launch" data-game="match">Play</button></article>
+<article class="gameCard"><div class="icon">📡</div><div><div class="kicker">Conversation · 3–12 min</div><h2>Есть контакт</h2><p>The phone runs the secret and letters. The real game happens out loud.</p></div><div class="row"><span class="badge">2–4 players</span><span class="badge">Voice first</span></div><button class="primary launch" data-game="contact">Play</button></article>
+<article class="gameCard"><div class="icon">⚡</div><div><div class="kicker">Microgames · ~60 sec</div><h2>Microgame Rush</h2><p>Six rapid challenges: timing, reaction, memory, attention, and precision.</p></div><div class="row"><span class="badge">Solo</span><span class="badge">1 minute</span></div><button class="primary launch" data-game="rush">Play</button></article>
+<article class="gameCard"><div class="icon">✏️</div><div><div class="kicker">Creativity · 4–12 min</div><h2>Broken Telephone</h2><p>Phrase → drawing → guess → drawing. The full chain appears only at the end.</p></div><div class="row"><span class="badge">3–6 players</span><span class="badge">Pass-the-phone</span></div><button class="primary launch" data-game="telephone">Play</button></article>
+<article class="gameCard"><div class="icon">🕵️</div><div><div class="kicker">Social deduction · 3–8 min</div><h2>Не тот вопрос</h2><p>One player got a different question — and does not know it. Listen to the answers and figure out who.</p></div><div class="row"><span class="badge">3–6 players</span><span class="badge">Discussion</span></div><button class="primary launch" data-game="wrong">Play</button></article>
+</div></section>
+
+<!-- QUIZ -->
+<section id="quiz" class="hidden">
+<div id="quizSetup" class="panel"><div class="kicker">Confidence Duel</div><h1>Know the answer — and can you read your opponent?</h1><p class="muted">In Solo there are no confidence bets: answer → reveal → fact. Duel adds confidence and an opponent prediction.</p>
+<h3>Mode</h3><div class="grid g2" id="quizModes"><button data-v="solo" class="active">👤 Solo</button><button data-v="duel">👥 Duel</button></div>
+<h3 style="margin-top:16px">Deck</h3><div class="grid g3" id="quizDecks"><button data-v="mix" class="active">🎲 Mix</button><button data-v="school">🏫 School</button><button data-v="general">🌍 General knowledge</button></div>
+<div class="ruleBox muted small">In Duel: Unsure +1/0 · Confident +2/−1 · I know +3/−2. A correct read of your opponent gives +1. The final question doubles only your own answer bet.</div><button id="quizStart" class="primary" style="margin-top:14px">Start 5 questions</button></div>
+<div id="quizGame" class="hidden"><div class="panel"><div class="row"><div><div id="qProg" class="muted small"></div><span id="qCat" class="badge"></span> <span id="qKind" class="badge"></span></div><div id="qScore" class="score"></div></div></div>
+<div id="qFinal" class="panel center hidden"><div class="kicker">Final</div><strong>Your answer bet ×2</strong></div>
+<div id="qQuestionPanel" class="panel"><div class="row"><span id="qTurn" class="muted"></span><span id="qDiff" class="badge"></span></div><h2 id="qText" style="margin-top:12px"></h2><div id="qAnswers" class="grid g2"></div>
+<div id="qConf" class="hidden" style="margin-top:16px"><div class="kicker">Bet</div><h3>How confident are you?</h3><div class="grid g3"><button data-c="low">🤔 Unsure</button><button data-c="mid">🙂 Confident</button><button data-c="high">😎 I know</button></div></div>
+<div id="qPredict" class="readBox hidden"><div class="kicker">Read your opponent</div><h3 id="qPredictText"></h3><div class="grid g2"><button data-p="yes">👍 Gets it right</button><button data-p="no">👀 Gets it wrong</button></div></div></div>
+<div id="qPass" class="panel center hidden"><div class="big">🔒</div><h2>Answer locked</h2><p class="muted">Pass the phone.</p><button id="qPassBtn" class="primary"></button></div>
+<div id="qReveal" class="hidden"><div class="panel"><div class="kicker">Reveal</div><div id="qCorrect" class="big"></div><p id="qFact" class="muted"></p></div><div id="qRevealCards" class="grid g2"></div><div class="panel"><button id="qNext" class="primary"></button></div></div></div>
+<div id="quizEnd" class="hidden"><div class="panel center"><div class="kicker">Result</div><h1 id="qWinner"></h1><div id="qFinalScore" class="score"></div></div><div id="qSummary" class="panel"></div><button class="primary replay" data-game="quiz">Play again</button></div>
+</section>
+
+<!-- 3 MOVES -->
+<section id="moves" class="hidden">
+<div id="movesSetup" class="panel"><div class="kicker">3 Moves</div><h1>Three actions. Then you only watch.</h1><p class="muted">The series mixes Numbers, Route, Switches, and Shapes.</p><div class="grid g2" id="movesModes"><button data-v="solo" class="active">👤 Solo</button><button data-v="duel">👥 Duel</button></div><button id="movesStart" class="primary" style="margin-top:14px">Start 5 puzzles</button></div>
+<div id="movesGame" class="hidden"><div class="panel"><div class="row"><div id="mProg" class="muted"></div><div id="mScore" class="score"></div></div></div>
+<div id="mPuzzle" class="panel"><div class="row"><span id="mTurn" class="muted"></span><span id="mKind" class="badge"></span></div><p id="mHint" class="muted small" style="margin-top:10px"></p>
+<div id="mVisual"></div><div id="mChosen" class="steps"></div><div id="mOps" class="opGrid"></div><div class="grid g2" style="margin-top:12px"><button id="mUndo" class="secondary">↶ Undo</button><button id="mReset" class="secondary">Reset</button></div></div>
+<div id="mPass" class="panel center hidden"><div class="big">🔒</div><h2>Plan locked</h2><p class="muted">The second player solves the same puzzle.</p><button id="mPassBtn" class="primary"></button></div>
+<div id="mReveal" class="hidden"><div class="panel"><div class="kicker">Reveal</div><div id="mSolution"></div><p id="mNote" class="muted"></p></div><div id="mPlayersReveal" class="grid g2"></div><div class="panel"><button id="mNext" class="primary"></button></div></div></div>
+<div id="movesEnd" class="hidden"><div class="panel center"><div class="kicker">Series complete</div><h1 id="mWinner"></h1><div id="mFinalScore" class="score"></div></div><div id="mSummary" class="panel"></div><button class="primary replay" data-game="moves">Play another series</button></div>
+</section>
+
+<!-- MATCH -->
+<section id="match" class="hidden">
+<div id="matchSetup" class="panel"><div class="kicker">Match 2.0</div><h1>Remember the board. Understand the rule. Don’t miss.</h1><p class="muted">Three boards with different logic. A miss costs 2 seconds.</p><div class="grid g2" id="matchModes"><button data-v="solo" class="active">👤 Solo</button><button data-v="duel">👥 Duel</button></div><button id="matchStart" class="primary" style="margin-top:14px">Start 3 boards</button></div>
+<div id="matchGame" class="hidden"><div class="panel"><div class="row"><div><div id="mtProg" class="muted small"></div><span id="mtTypeBadge" class="badge"></span> <span id="mtTurn" class="badge"></span></div><div><div id="mtScore" class="score"></div><div id="mtTime" class="muted small" style="text-align:right"></div></div></div><div class="progress" style="margin-top:10px"><div id="mtTimerBar"></div></div></div>
+<div class="panel center"><div id="mtRule" class="big"></div><p id="mtStatus" class="muted"></p><div id="mtGrid" class="matchGrid"></div></div></div>
+<div id="matchEnd" class="hidden"><div class="panel center"><div class="kicker">Finish</div><h1 id="mtWinner"></h1><div id="mtFinalScore" class="score"></div></div><div id="mtSummary" class="panel"></div><button class="primary replay" data-game="match">Play another series</button></div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="hidden">
+<div id="contactSetup" class="panel"><div class="kicker">Есть контакт</div><h1>The phone hosts. You talk.</h1><p class="muted">The clue-giver gets a word; the others try to recognize it together.</p>
+<h3>Players</h3><div class="grid g3" id="contactPlayers"><button data-v="2" class="active">2</button><button data-v="3">3</button><button data-v="4">4</button></div>
+<h3 style="margin-top:16px">Session</h3><div class="grid g2" id="contactLength"><button data-v="quick" class="active">⚡ Quick · 1 secret</button><button data-v="classic">🎙️ Classic · 3 secretа</button></div>
+<button id="contactStart" class="primary" style="margin-top:14px">Start</button></div>
+<div id="contactGame" class="hidden"><div class="panel"><div class="row"><div><div id="cProg" class="muted small"></div><span id="cClueBadge" class="badge"></span></div><div id="cScore" class="score"></div></div><div id="cPrefix" class="prefix"></div><div id="cMask" class="secretMask center"></div></div>
+<div id="cPrivate" class="panel center"><div class="big">🙈</div><h2 id="cPrivateTitle"></h2><p class="muted">Everyone else looks away.</p><button id="cShowWord" class="primary">Show word</button><div id="cWordBox" class="hidden"><div class="contactWord" id="cCandidate"></div><p class="muted">Describe the word without saying it or a word from the same root.</p><button id="cHideWord" class="primary">Hide and start clue</button></div></div>
+<div id="cShared" class="panel hidden"><div class="center"><div class="kicker">Listen to the clue</div><h2 id="cSharedTitle"></h2></div><div class="contactActions"><button id="cContactBtn" class="primary">📡 Contact!</button><button id="cNoContact" class="secondary">Nobody got it</button></div><div class="ruleBox"><strong>Думаете, знаете secret?</strong><div class="row" style="margin-top:8px;align-items:stretch"><input id="cGuessInput" class="input" placeholder="Secret word"><button id="cGuessBtn" class="secondary" style="width:auto">Check</button></div><div id="cGuessMsg" class="muted small" style="margin-top:8px"></div><button id="cHintBtn" class="ghost" style="margin-top:8px">Reveal a letter</button></div></div>
+<div id="cCheck" class="panel center hidden"><div class="kicker">Contact</div><div id="cCount" class="countdown">3</div><h2>On zero, both say the word</h2><div id="cCheckResult" class="hidden"><p class="muted">Clue-giver word:</p><div id="cRevealCandidate" class="contactWord"></div><p>Match?</p><div class="grid g2"><button id="cYes" class="primary">Yes</button><button id="cNo" class="secondary">No</button></div></div></div>
+<div id="cRoundEnd" class="panel center hidden"><div class="kicker">Secret revealed</div><h1 id="cSecretReveal"></h1><button id="cNext" class="primary"></button></div></div>
+<div id="contactEnd" class="hidden"><div class="panel center"><div class="kicker">Series complete</div><h1>Contact установлен</h1><div id="cFinalScore" class="score"></div></div><div id="cSummary" class="panel"></div><button class="primary replay" data-game="contact">Again</button></div>
+</section>
+
+<!-- MICROGAME RUSH -->
+<section id="rush" class="hidden">
+<div id="rushSetup" class="panel"><div class="kicker">Microgame Rush</div><h1>6 challenges. Almost no pauses.</h1><p class="muted">Each challenge has a one-line rule. The next starts immediately after the result.</p><button id="rushStart" class="primary">Start Rush</button></div>
+<div id="rushGame" class="hidden"><div class="panel"><div class="row"><div id="rProg" class="muted"></div><div id="rScore" class="score"></div></div><div class="progress" style="margin-top:10px"><div id="rProgressBar"></div></div></div><div id="rStage" class="panel microStage"></div></div>
+<div id="rushEnd" class="hidden"><div class="panel center"><div class="kicker">About 60 seconds later</div><h1 id="rTitle"></h1><div id="rFinalScore" class="score"></div></div><div id="rSummary" class="panel"></div><button class="primary replay" data-game="rush">Another Rush</button></div>
+</section>
+
+<!-- BROKEN TELEPHONE -->
+<section id="telephone" class="hidden">
+<div id="telephoneSetup" class="panel"><div class="kicker">Broken Telephone</div><h1>Don’t show the previous screen</h1><p class="muted">Фразу видит только первый игрок. Yesльше чередуются рисунок и догадка.</p><h3>Players</h3><div class="grid g4" id="btPlayers"><button data-v="3" class="active">3</button><button data-v="4">4</button><button data-v="5">5</button><button data-v="6">6</button></div><h3 style="margin-top:16px">Phrases</h3><div class="grid g3" id="btTheme"><button data-v="normal" class="active">🙂 Normal</button><button data-v="weird">🤪 Weird</button><button data-v="travel">✈️ Travel</button></div><button id="btStart" class="primary" style="margin-top:14px">Start цепочку</button></div>
+<div id="btGame" class="hidden"><div class="panel"><div class="row"><div id="btProg" class="muted"></div><span id="btPlayerBadge" class="badge"></span></div></div>
+<div id="btPrivate" class="panel center hidden"><div class="big">🙈</div><h2 id="btPrivateTitle"></h2><p class="muted">Is everyone else looking away?</p><button id="btRevealPrivate" class="primary">Show me</button></div>
+<div id="btDraw" class="panel hidden"><h2 id="btDrawTitle"></h2><p id="btDrawSource" class="muted"></p><div class="canvasWrap"><canvas id="btCanvas" width="760" height="320"></canvas></div><div class="grid g3" style="margin-top:10px"><button id="btUndo" class="secondary">↶ Undo</button><button id="btClear" class="secondary">Clear</button><button id="btSubmitDraw" class="primary">Done</button></div></div>
+<div id="btGuess" class="panel hidden"><h2 id="btGuessTitle"></h2><p class="muted">Describe what you see. The next player will see only your phrase.</p><img id="btGuessImage" class="chainImage" alt="Предыдущий рисунок"><textarea id="btGuessInput" class="textarea" maxlength="100" placeholder="For example: a cat with a suitcase..."></textarea><button id="btSubmitGuess" class="primary" style="margin-top:10px">Done</button></div>
+<div id="btPass" class="panel center hidden"><div class="big">🔒</div><h2>Answer locked</h2><p id="btPassText" class="muted"></p><button id="btPassBtn" class="primary"></button></div></div>
+<div id="telephoneEnd" class="hidden"><div class="panel"><div class="kicker">Big reveal</div><h1>What did the story turn into?</h1><div id="btChain" class="chain"></div></div><button class="primary replay" data-game="telephone">Another chain</button></div>
+</section>
+
+<!-- WRONG QUESTION -->
+<section id="wrong" class="hidden">
+<div id="wrongSetup" class="panel"><div class="kicker">Не тот вопрос</div><h1>One question is different. But who got it?</h1><p class="muted">Everyone reads their question privately. Then everyone answers out loud and discusses.</p><h3>Players</h3><div class="grid g4" id="wPlayers"><button data-v="3" class="active">3</button><button data-v="4">4</button><button data-v="5">5</button><button data-v="6">6</button></div><button id="wStart" class="primary" style="margin-top:14px">Start 3 раунда</button></div>
+<div id="wrongGame" class="hidden"><div class="panel"><div class="row"><div id="wProg" class="muted"></div><div id="wScore" class="score"></div></div></div>
+<div id="wPrivate" class="panel center"><div class="big">🙈</div><h2 id="wPrivateTitle"></h2><p class="muted">Only this player looks at the screen.</p><button id="wRevealBtn" class="primary">Show my question</button><div id="wPromptWrap" class="hidden"><div id="wPrompt" class="promptCard"></div><button id="wHideBtn" class="primary" style="margin-top:12px">Got it</button></div></div>
+<div id="wDiscuss" class="panel center hidden"><div class="kicker">Now out loud</div><h2>Everyone answers their own question</h2><p class="muted">Discuss the answers. Who sounds off?</p><div id="wDiscussTimer" class="timerBig">30</div><button id="wVoteNow" class="primary">Vote now</button></div>
+<div id="wVote" class="panel hidden"><h2>Who got the different question?</h2><div id="wVoteGrid" class="voteGrid"></div></div>
+<div id="wReveal" class="panel hidden"><div class="kicker">Reveal</div><h2 id="wRevealTitle"></h2><div class="grid g2"><div class="card"><div class="muted small">Most players</div><strong id="wMainQ"></strong></div><div class="card"><div class="muted small">Different question</div><strong id="wOddQ"></strong></div></div><p id="wRevealNote" class="muted" style="margin-top:12px"></p><button id="wNext" class="primary"></button></div></div>
+<div id="wrongEnd" class="hidden"><div class="panel center"><div class="kicker">Final result</div><h1 id="wEndTitle"></h1><div id="wEndScore" class="score"></div></div><div id="wSummary" class="panel"></div><button class="primary replay" data-game="wrong">Ещё 3 раунда</button></div>
+</section>
+</div>
+
+
+<div id="feedbackModal" class="feedbackOverlay hidden" aria-modal="true" role="dialog">
+  <div class="feedbackCard">
+    <div class="kicker">Anonymous playtest</div>
+    <h2 id="feedbackTitle">How was this game?</h2>
+    <p class="muted small">Three quick answers help decide what belongs in TimeWhim.</p>
+
+    <div class="small"><strong>How clear was it?</strong></div>
+    <div class="feedbackScale" data-field="clarity">
+      <button data-value="1">1</button><button data-value="2">2</button><button data-value="3">3</button><button data-value="4">4</button><button data-value="5">5</button>
+    </div>
+
+    <div class="small"><strong>How fun was it?</strong></div>
+    <div class="feedbackScale" data-field="interest">
+      <button data-value="1">1</button><button data-value="2">2</button><button data-value="3">3</button><button data-value="4">4</button><button data-value="5">5</button>
+    </div>
+
+    <div class="small"><strong>Would you play another round?</strong></div>
+    <div class="feedbackScale binary" data-field="replay">
+      <button data-value="yes">Yes</button><button data-value="no">No</button>
+    </div>
+
+    <textarea id="feedbackComment" class="textarea" maxlength="600" placeholder="What was annoying, unclear, or especially good? (optional)"></textarea>
+    <p class="feedbackPrivacy">No name or email. IP addresses are anonymized and screen recording is off. Please do not include personal information.</p>
+    <div class="feedbackActions">
+      <button id="feedbackSkip" class="ghost">Skip</button>
+      <button id="feedbackSend" class="primary" disabled>Send</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(()=>{
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const games=['quiz','moves','match','contact','rush','telephone','wrong'];
+
+const PH_TOKEN='phc_pw7bhR56gQyPRYrs42S5xxtvMpn98aEFPqbZvzFeYuGw';
+const PH_HOST='https://us.i.posthog.com';
+let analyticsGame=null,analyticsStartedAt=0,analyticsCompleted=false,feedbackGame=null;
+let feedbackState={clarity:null,interest:null,replay:null};
+function anonId(){
+  try{
+    let id=sessionStorage.getItem('tw_anon_session');
+    if(!id){id=(crypto.randomUUID?crypto.randomUUID():'tw_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2));sessionStorage.setItem('tw_anon_session',id)}
+    return id;
+  }catch(e){return 'tw_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2)}
+}
+function attribution(){
+  try{
+    const key='tw_attribution';
+    const saved=sessionStorage.getItem(key);
+    if(saved)return JSON.parse(saved);
+    const q=new URLSearchParams(location.search);
+    const a={
+      utm_source:q.get('utm_source')||null,
+      utm_medium:q.get('utm_medium')||null,
+      utm_campaign:q.get('utm_campaign')||null,
+      utm_content:q.get('utm_content')||null,
+      utm_term:q.get('utm_term')||null,
+      referrer_host:document.referrer?new URL(document.referrer).hostname:null,
+      entry_path:location.pathname
+    };
+    sessionStorage.setItem(key,JSON.stringify(a));
+    return a;
+  }catch(e){return{}}
+}
+const TW_ATTR=attribution();
+function phCapture(event,properties){
+  const body={api_key:PH_TOKEN,event:event,properties:Object.assign({distinct_id:anonId(),'$process_person_profile':false,prototype_version:'1.3-feedback'},TW_ATTR,properties||{})};
+  try{return fetch(PH_HOST+'/i/v0/e/',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),keepalive:true,credentials:'omit'}).catch(()=>{})}catch(e){}
+}
+function analyticsStart(game,props){
+  analyticsGame=game;analyticsStartedAt=Date.now();analyticsCompleted=false;
+  phCapture('game_started',Object.assign({game:game},props||{}));
+}
+function analyticsComplete(game,props){
+  if(analyticsGame===game&&analyticsCompleted)return;
+  analyticsGame=game;analyticsCompleted=true;
+  const duration=analyticsStartedAt?Math.round((Date.now()-analyticsStartedAt)/1000):null;
+  phCapture('game_completed',Object.assign({game:game,duration_sec:duration},props||{}));
+  later(()=>openFeedback(game),450);
+}
+function analyticsAbandon(reason){
+  if(!analyticsGame||analyticsCompleted)return;
+  const duration=analyticsStartedAt?Math.round((Date.now()-analyticsStartedAt)/1000):null;
+  phCapture('game_abandoned',{game:analyticsGame,duration_sec:duration,reason:reason||'unknown'});
+  analyticsGame=null;analyticsStartedAt=0;analyticsCompleted=false;
+}
+function scrubComment(v){
+  return (v||'').trim().slice(0,600)
+    .replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi,'[email removed]')
+    .replace(/\+?\d[\d\s().-]{7,}\d/g,'[phone removed]');
+}
+function openFeedback(game){
+  feedbackGame=game;feedbackState={clarity:null,interest:null,replay:null};
+  document.querySelectorAll('.feedbackScale button').forEach(b=>b.classList.remove('active'));
+  $('#feedbackComment').value='';
+  $('#feedbackSend').disabled=true;
+  $('#feedbackTitle').textContent='Как тебе «'+({quiz:'Confidence Duel',moves:'3 Moves',match:'Match 2.0',contact:'Contact!',rush:'Microgame Rush',telephone:'Broken Telephone',wrong:'Wrong Question'}[game]||game)+'»?';
+  $('#feedbackModal').classList.remove('hidden');
+}
+function closeFeedback(){$('#feedbackModal').classList.add('hidden');feedbackGame=null}
+document.querySelectorAll('.feedbackScale button').forEach(b=>b.onclick=()=>{
+  const box=b.closest('.feedbackScale'),field=box.dataset.field;
+  feedbackState[field]=b.dataset.value;
+  box.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===b));
+  $('#feedbackSend').disabled=!(feedbackState.clarity&&feedbackState.interest&&feedbackState.replay);
+});
+$('#feedbackSkip').onclick=()=>{if(feedbackGame)phCapture('feedback_skipped',{game:feedbackGame});closeFeedback()};
+$('#feedbackSend').onclick=()=>{
+  if(!feedbackGame)return;
+  const comment=scrubComment($('#feedbackComment').value);
+  phCapture('feedback_submitted',{game:feedbackGame,clarity:Number(feedbackState.clarity),interest:Number(feedbackState.interest),would_replay:feedbackState.replay==='yes',comment:comment,comment_length:comment.length});
+  $('#feedbackSend').textContent='Thanks ✓';$('#feedbackSend').disabled=true;
+  later(()=>{closeFeedback();$('#feedbackSend').textContent='Send'},600);
+};
+try{
+  const qs=location.search||'';
+  $('#langEn').href='./'+qs;
+  $('#langRu').href='../'+qs;
+}catch(e){}
+phCapture('lab_loaded',{language:'en'});
+window.addEventListener('pagehide',()=>analyticsAbandon('pagehide'));
+
+const timers=new Set(), intervals=new Set();
+function later(fn,ms){const id=setTimeout(()=>{timers.delete(id);fn()},ms);timers.add(id);return id}
+function every(fn,ms){const id=setInterval(fn,ms);intervals.add(id);return id}
+function clearSchedules(){timers.forEach(clearTimeout);intervals.forEach(clearInterval);timers.clear();intervals.clear()}
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function selectButtons(container,value){container.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.v===String(value)))}
+function showGame(id){phCapture('game_opened',{game:id});clearSchedules();$('#home').classList.add('hidden');games.forEach(g=>$('#'+g).classList.add('hidden'));$('#'+id).classList.remove('hidden');$('#homeBtn').classList.remove('hidden');window.scrollTo(0,0)}
+function home(){analyticsAbandon('home');closeFeedback();clearSchedules();games.forEach(g=>$('#'+g).classList.add('hidden'));$('#home').classList.remove('hidden');$('#homeBtn').classList.add('hidden');window.scrollTo(0,0)}
+$$('.launch').forEach(b=>b.onclick=()=>showGame(b.dataset.game));$('#homeBtn').onclick=home;$('.replay').forEach(b=>b.onclick=()=>{phCapture('replay_clicked',{game:b.dataset.game});closeFeedback();resetToSetup(b.dataset.game)});
+function resetToSetup(g){clearSchedules();const sec=$('#'+g);[...sec.children].forEach(x=>x.classList.add('hidden'));const setup=sec.querySelector('[id$="Setup"]');if(setup)setup.classList.remove('hidden');window.scrollTo(0,0)}
+
+/* QUIZ */
+const quizBank=[
+{deck:'school',cat:'Math',kind:'Calculation',d:1,q:'What is 0.1 × 0.1?',a:['0.01','0.1','1','0.001'],c:0,f:'One tenth of one tenth is one hundredth: 0.01.'},
+{deck:'school',cat:'Math',kind:'Comparison',d:2,q:'Which is larger?',a:['2¹⁰','10³','They are equal','Cannot compare'],c:0,f:'2¹⁰ = 1024, while 10³ = 1000.'},
+{deck:'school',cat:'Math',kind:'Trap',d:3,q:'A number is increased by 20%, then decreased by 20%. The result is…',a:['The original number','4% lower','4% higher','8% lower'],c:1,f:'1.2 × 0.8 = 0.96, so the result is 4% lower.'},
+{deck:'school',cat:'Physics',kind:'What stays?',d:1,q:'What does not change if a person moves from Earth to the Moon?',a:['Weight','Mass','Gravity force','Free-fall acceleration'],c:1,f:'Mass stays the same; weight changes.'},
+{deck:'school',cat:'Physics',kind:'Paradox',d:2,q:'An object moves in a circle at constant speed. Is it accelerating?',a:['No','Yes','Only while speeding up','Only with friction'],c:1,f:'Yes. The direction of velocity is changing.'},
+{deck:'school',cat:'Physics',kind:'Prediction',d:3,q:'Two same-shaped balls fall in a vacuum: one iron, one wooden. Which lands first?',a:['Iron','Wooden','Same time','Depends on mass'],c:2,f:'Without air resistance, both have the same gravitational acceleration.'},
+{deck:'school',cat:'Chemistry',kind:'Fact',d:1,q:'What determines an element’s atomic number?',a:['Number of protons','Number of neutrons','Number of shells','Atomic mass'],c:0,f:'Atomic number equals the number of protons.'},
+{deck:'school',cat:'Chemistry',kind:'Connection',d:2,q:'How do isotopes of the same element differ?',a:['Protons','Neutrons','Symbol','Nuclear charge'],c:1,f:'Isotopes have the same number of protons but different numbers of neutrons.'},
+{deck:'school',cat:'Biology',kind:'Fact',d:1,q:'What is the largest organ in the human body?',a:['Liver','Skin','Lungs','Intestine'],c:1,f:'Skin is generally considered the body’s largest organ.'},
+{deck:'school',cat:'Geography',kind:'Mental map',d:2,q:'Which continent is crossed by both the Equator and Prime Meridian?',a:['Asia','Africa','South America','Europe'],c:1,f:'Both lines cross Africa.'},
+{deck:'school',cat:'Geography',kind:'Definition',d:3,q:'What is the largest desert on Earth?',a:['Sahara','Antarctic Desert','Gobi','Arabian Desert'],c:1,f:'Antarctica is the largest desert by area; deserts are defined by low precipitation.'},
+{deck:'general',cat:'History',kind:'What is closer?',d:2,q:'Cleopatra lived closer in time to…',a:['The Great Pyramid','The Moon landing','About equally close','Cannot compare'],c:1,f:'Cleopatra lived closer to 1969 than to the construction of the Great Pyramid.'},
+{deck:'general',cat:'Cities',kind:'Mental map',d:3,q:'Which city is farther north?',a:['Rome','New York','Madrid','Beijing'],c:0,f:'Rome is around 41.9° N; New York around 40.7° N.'},
+{deck:'general',cat:'Nature',kind:'Unexpected fact',d:2,q:'Which animal has three hearts?',a:['Octopus','Dolphin','Penguin','Sea turtle'],c:0,f:'An octopus has three hearts: two branchial and one systemic.'},
+{deck:'general',cat:'Technology',kind:'What came first?',d:2,q:'Which appeared first?',a:['Email','World Wide Web','SMS','Compact disc'],c:0,f:'Early email systems appeared before the WWW, SMS, and mass-market CDs.'},
+{deck:'general',cat:'Human body',kind:'Estimate',d:1,q:'Roughly how much oxygen is in the air we breathe?',a:['10%','21%','35%','50%'],c:1,f:'Dry atmospheric air contains about 21% oxygen.'},
+{deck:'general',cat:'Food',kind:'Category',d:3,q:'Which is botanically a berry?',a:['Strawberry','Banana','Cherry','Raspberry'],c:1,f:'Botanically, a banana is a berry.'},
+{deck:'general',cat:'World',kind:'Fact',d:1,q:'Which is the largest ocean?',a:['Atlantic','Indian','Pacific','Arctic'],c:2,f:'The Pacific Ocean is the largest by area.'},
+{deck:'general',cat:'Time',kind:'Quick estimate',d:2,q:'How many minutes are in two and a half hours?',a:['120','130','150','180'],c:2,f:'2.5 × 60 = 150 minutes.'}
+];
+let qMode='solo',qDeck='mix',qList=[],qI=0,qTurnI=0,qPick=null,qRound={},qScores={A:0,B:0},qHistory=[];
+const qMeta={low:{name:'Unsure',ok:1,bad:0},mid:{name:'Confident',ok:2,bad:-1},high:{name:'I know',ok:3,bad:-2}};
+$('#quizModes').querySelectorAll('button').forEach(b=>b.onclick=()=>{qMode=b.dataset.v;selectButtons($('#quizModes'),qMode)});
+$('#quizDecks').querySelectorAll('button').forEach(b=>b.onclick=()=>{qDeck=b.dataset.v;selectButtons($('#quizDecks'),qDeck)});
+function qPlayers(){if(qMode==='solo')return['A'];const first=qI%2===0?'A':'B';return first==='A'?['A','B']:['B','A']}
+function qChoose(){const pool=quizBank.filter(x=>qDeck==='mix'||x.deck===qDeck),out=[];[1,2,2,3,3].forEach(d=>{let c=pool.filter(x=>x.d===d&&!out.includes(x));if(!c.length)c=pool.filter(x=>!out.includes(x));out.push(shuffle(c)[0])});return out}
+function qRender(){const q=qList[qI],ps=qPlayers(),p=ps[qTurnI];qPick=null;$('#qProg').textContent=`Question ${qI+1} of 5`;$('#qCat').textContent=q.cat;$('#qKind').textContent=q.kind;$('#qDiff').textContent=q.d===1?'Warm-up':q.d===2?'Tricky':'Trap';$('#qTurn').textContent=qMode==='solo'?'Your turn':'Player '+p;$('#qText').textContent=q.q;$('#qScore').textContent=qMode==='solo'?`Correct: ${qScores.A}`:`A ${qScores.A} : ${qScores.B} B`;$('#qFinal').classList.toggle('hidden',qI!==4);$('#qConf').classList.add('hidden');$('#qPredict').classList.add('hidden');$('#qPass').classList.add('hidden');$('#qReveal').classList.add('hidden');$('#qQuestionPanel').classList.remove('hidden');const box=$('#qAnswers');box.innerHTML='';q.a.forEach((txt,i)=>{const b=document.createElement('button');b.className='answer';b.textContent=txt;b.onclick=()=>{qPick=i;[...box.children].forEach((x,j)=>x.classList.toggle('selected',j===i));if(qMode==='solo'){qRound.A={a:i,c:null,pred:null};qReveal()}else $('#qConf').classList.remove('hidden')};box.appendChild(b)})}
+$('#qConf').querySelectorAll('button').forEach(b=>b.onclick=()=>{if(qPick===null)return;const ps=qPlayers(),p=ps[qTurnI];qRound[p]={a:qPick,c:b.dataset.c,pred:null};$('#qConf').classList.add('hidden');$('#qPredict').classList.remove('hidden');$('#qPredictText').textContent=qTurnI===0?'Do you think your opponent will get it right?':'Do you think the first player answered correctly?'});
+$('#qPredict').querySelectorAll('button').forEach(b=>b.onclick=()=>{const ps=qPlayers(),p=ps[qTurnI];qRound[p].pred=b.dataset.p==='yes';if(qTurnI===0){$('#qQuestionPanel').classList.add('hidden');$('#qPass').classList.remove('hidden');$('#qPassBtn').textContent=`Player ${ps[1]} ready`}else qReveal()});
+$('#qPassBtn').onclick=()=>{qTurnI=1;qRender()};
+function qReveal(){const q=qList[qI];$('#qQuestionPanel').classList.add('hidden');$('#qPass').classList.add('hidden');$('#qReveal').classList.remove('hidden');$('#qCorrect').textContent=q.a[q.c];$('#qFact').textContent=q.f;const ps=qPlayers(),box=$('#qRevealCards');box.innerHTML='';
+ if(qMode==='solo'){const r=qRound.A,right=r.a===q.c;if(right)qScores.A++;qHistory.push({p:'A',right});const d=document.createElement('div');d.className='card';d.innerHTML=`<strong>Your answer</strong><p style="margin:8px 0">${q.a[r.a]}</p><div class="${right?'resultGood':'resultBad'}">${right?'Correct +1':'Wrong'}</div>`;box.appendChild(d)}
+ else{const rights={};ps.forEach(p=>rights[p]=qRound[p].a===q.c);const mult=qI===4?2:1;ps.forEach(p=>{const r=qRound[p],m=qMeta[r.c],base=(rights[p]?m.ok:m.bad)*mult,other=p==='A'?'B':'A',readOK=r.pred===rights[other],bonus=readOK?1:0;qScores[p]+=base+bonus;qHistory.push({p,right:rights[p],conf:r.c,readOK});const d=document.createElement('div');d.className='card';d.innerHTML=`<strong>Player ${p}</strong><p style="margin:8px 0">${q.a[r.a]}</p><div class="${rights[p]?'resultGood':'resultBad'}">${rights[p]?'Correct':'Wrong'} · ${base>=0?'+':''}${base}</div><div class="${readOK?'resultGood':'muted'}" style="margin-top:8px">Opponent read: ${readOK?'correct +1':'miss'}</div>`;box.appendChild(d)})}
+ $('#qScore').textContent=qMode==='solo'?`Correct: ${qScores.A}`:`A ${qScores.A} : ${qScores.B} B`;$('#qNext').textContent=qI===4?'Final result':'Next question'}
+$('#qNext').onclick=()=>{if(qI===4)return qFinish();qI++;qTurnI=0;qRound={};qRender()};
+function qFinish(){analyticsComplete('quiz',{mode:qMode,score_a:qScores.A,score_b:qMode==='duel'?qScores.B:null});$('#quizGame').classList.add('hidden');$('#quizEnd').classList.remove('hidden');if(qMode==='solo'){$('#qWinner').textContent='Round complete';$('#qFinalScore').textContent=`${qScores.A}/5 correct`;$('#qSummary').innerHTML='<h2>Clean Solo</h2><p>After your choice, you immediately see the correct answer and a short fact — no confidence layer.</p>'}else{const reads=qHistory.filter(x=>x.readOK).length;$('#qWinner').textContent=qScores.A===qScores.B?'Draw':qScores.A>qScores.B?'A wins':'B wins';$('#qFinalScore').textContent=`A ${qScores.A} : ${qScores.B} B`;$('#qSummary').innerHTML=`<h2>Knowledge + reading</h2><p>Correct opponent reads: <strong>${reads}/10</strong>.</p>`}}
+$('#quizStart').onclick=()=>{analyticsStart('quiz',{mode:qMode,deck:qDeck});qList=qChoose();qI=0;qTurnI=0;qScores={A:0,B:0};qHistory=[];qRound={};$('#quizSetup').classList.add('hidden');$('#quizEnd').classList.add('hidden');$('#quizGame').classList.remove('hidden');qRender()};
+
+/* 3 MOVES */
+function rotateCW(a){return[a[2],a[0],a[3],a[1]]}function flipH(a){return[a[1],a[0],a[3],a[2]]}function invert(a){return a.map(x=>x?0:1)}
+const movePuzzles=[
+{kind:'Numbers',hint:'Reach the target using exactly three different operations.',start:14,goal:61,ops:['+7','×3','−2','↔','+10','×2'],sol:['+7','×3','−2']},
+{kind:'Numbers',hint:'↔ reverses the digits.',start:27,goal:40,ops:['↔','+8','÷2','+5','×2','−3'],sol:['↔','+8','÷2']},
+{kind:'Route',hint:'The dot must end on the green cell.',start:{x:0,y:2},goal:{x:4,y:1},ops:['→2','↑1','→2','↓1','←1','↗1'],sol:['→2','↑1','→2']},
+{kind:'Switches',hint:'Each tile toggles its own set of lamps.',start:0,goal:5,ops:['A','B','C','D','E'],masks:{A:12,B:3,C:10,D:6,E:9},sol:['A','B','C']},
+{kind:'Shapes',hint:'Transform the shape into the target.',start:[1,0,0,0],goal:[0,1,1,1],ops:['↻','⇆','INV','↺','⇵'],sol:['↻','⇆','INV']}
+];
+let mMode='solo',mList=[],mI=0,mTurnI=0,mChosen=[],mRound={},mScores={A:0,B:0};
+$('#movesModes').querySelectorAll('button').forEach(b=>b.onclick=()=>{mMode=b.dataset.v;selectButtons($('#movesModes'),mMode)});
+function mPlayers(){if(mMode==='solo')return['A'];const first=mI%2===0?'A':'B';return first==='A'?['A','B']:['B','A']}
+function applyNum(n,op){if(op==='↔')return Number(String(n).split('').reverse().join(''));if(op[0]==='+')return n+Number(op.slice(1));if(op[0]==='−')return n-Number(op.slice(1));if(op[0]==='×')return n*Number(op.slice(1));if(op[0]==='÷')return n/Number(op.slice(1));return n}
+function applyMove(state,op,pz){if(pz.kind==='Numbers')return applyNum(state,op);if(pz.kind==='Route'){let s={...state};if(op==='→2')s.x+=2;if(op==='↑1')s.y-=1;if(op==='↓1')s.y+=1;if(op==='←1')s.x-=1;if(op==='↗1'){s.x+=1;s.y-=1}return s}if(pz.kind==='Switches')return state^pz.masks[op];if(pz.kind==='Shapes'){if(op==='↻')return rotateCW(state);if(op==='↺')return rotateCW(rotateCW(rotateCW(state)));if(op==='⇆')return flipH(state);if(op==='⇵')return [state[2],state[3],state[0],state[1]];if(op==='INV')return invert(state)}return state}
+function sameState(a,b){return typeof a==='number'?Math.abs(a-b)<1e-9:Array.isArray(a)?a.join(',')===b.join(','):a.x===b.x&&a.y===b.y}
+function evalSeq(seq,pz){let s=JSON.parse(JSON.stringify(pz.start)),states=[JSON.parse(JSON.stringify(s))];seq.forEach(op=>{s=applyMove(s,op,pz);states.push(JSON.parse(JSON.stringify(s)))});return{ok:sameState(s,pz.goal),states,end:s}}
+function renderRoute(state,goal){let h='<div class="routeGrid">';for(let y=0;y<5;y++)for(let x=0;x<5;x++){let cls='routeCell',txt='';if(x===goal.x&&y===goal.y){cls+=' goal';txt='◎'}if(x===state.x&&y===state.y){cls+=' start';txt='●'}h+=`<div class="${cls}">${txt}</div>`}return h+'</div>'}
+function renderLamps(mask){let h='<div class="switches">';for(let i=3;i>=0;i--)h+=`<div class="lamp ${mask&(1<<i)?'on':''}"></div>`;return h+'</div>'}
+function renderShape(arr){return'<div class="shapeGrid">'+arr.map(x=>`<div class="shapeCell ${x?'on':''}"></div>`).join('')+'</div>'}
+function renderState(state,pz){if(pz.kind==='Numbers')return`<div class="heroNumber">${Number.isInteger(state)?state:Number(state).toFixed(2)}</div>`;if(pz.kind==='Route')return renderRoute(state,pz.goal);if(pz.kind==='Switches')return renderLamps(state);if(pz.kind==='Shapes')return renderShape(state);return''}
+function mRender(){const pz=mList[mI],ps=mPlayers(),p=ps[mTurnI];mChosen=[];$('#mProg').textContent=`Puzzle ${mI+1} of 5`;$('#mScore').textContent=mMode==='solo'?`Solved: ${mScores.A}`:`A ${mScores.A} : ${mScores.B} B`;$('#mTurn').textContent=mMode==='solo'?'Your three moves':'Player '+p;$('#mKind').textContent=pz.kind;$('#mHint').textContent=pz.hint;$('#mPass').classList.add('hidden');$('#mReveal').classList.add('hidden');$('#mPuzzle').classList.remove('hidden');mDrawVisual();mDrawChosen();mDrawOps()}
+function mDrawVisual(){const pz=mList[mI];let html='<div class="grid g2"><div class="card center"><div class="kicker">Start</div>'+renderState(pz.start,pz)+'</div><div class="card center"><div class="kicker">Target</div>'+renderState(pz.goal,pz)+'</div></div>';$('#mVisual').innerHTML=html}
+function mDrawChosen(){const pz=mList[mI],box=$('#mChosen');box.innerHTML='';let s=JSON.parse(JSON.stringify(pz.start));const first=document.createElement('div');first.className='stepBubble';first.textContent='START';box.appendChild(first);mChosen.forEach(op=>{const a=document.createElement('span');a.className='arrow';a.textContent='→';box.appendChild(a);s=applyMove(s,op,pz);const b=document.createElement('div');b.className='stepBubble';b.textContent=op;box.appendChild(b)})}
+function mDrawOps(){const pz=mList[mI],box=$('#mOps');box.innerHTML='';pz.ops.forEach(op=>{const b=document.createElement('button');b.className='op';b.textContent=op;b.disabled=mChosen.length>=3||mChosen.includes(op);b.onclick=()=>{if(mChosen.length>=3)return;mChosen.push(op);mDrawChosen();mDrawOps();if(mChosen.length===3)later(mSubmit,220)};box.appendChild(b)})}
+$('#mUndo').onclick=()=>{if(mChosen.length){mChosen.pop();mDrawChosen();mDrawOps()}};$('#mReset').onclick=()=>{mChosen=[];mDrawChosen();mDrawOps()};
+function mSubmit(){const ps=mPlayers(),p=ps[mTurnI];mRound[p]=[...mChosen];if(mMode==='duel'&&mTurnI===0){$('#mPuzzle').classList.add('hidden');$('#mPass').classList.remove('hidden');$('#mPassBtn').textContent=`Player ${ps[1]} ready`}else mReveal()}
+$('#mPassBtn').onclick=()=>{mTurnI=1;mRender()};
+function mReveal(){const pz=mList[mI];$('#mPuzzle').classList.add('hidden');$('#mPass').classList.add('hidden');$('#mReveal').classList.remove('hidden');const sol=evalSeq(pz.sol,pz);$('#mSolution').innerHTML=`<div class="center">${renderState(sol.end,pz)}<div class="steps">${pz.sol.map((x,i)=>`${i?'→':''}<span class="stepBubble">${x}</span>`).join('')}</div></div>`;$('#mNote').textContent='One valid path is shown. The key is that all three actions were locked before execution.';const box=$('#mPlayersReveal');box.innerHTML='';mPlayers().forEach(p=>{const ev=evalSeq(mRound[p],pz);if(ev.ok)mScores[p]++;const d=document.createElement('div');d.className='card';d.innerHTML=`<strong>${mMode==='solo'?'Your path':'Player '+p}</strong><p>${mRound[p].join(' → ')}</p><div class="${ev.ok?'resultGood':'resultBad'}">${ev.ok?'Target reached':'Didn’t work'}</div>`;box.appendChild(d)});$('#mScore').textContent=mMode==='solo'?`Solved: ${mScores.A}`:`A ${mScores.A} : ${mScores.B} B`;$('#mNext').textContent=mI===4?'Final result':'Next puzzle'}
+$('#mNext').onclick=()=>{if(mI===4)return mFinish();mI++;mTurnI=0;mRound={};mRender()};
+function mFinish(){analyticsComplete('moves',{mode:mMode,score_a:mScores.A,score_b:mMode==='duel'?mScores.B:null});$('#movesGame').classList.add('hidden');$('#movesEnd').classList.remove('hidden');$('#mWinner').textContent=mMode==='solo'?'Series complete':mScores.A===mScores.B?'Draw':mScores.A>mScores.B?'A wins':'B wins';$('#mFinalScore').textContent=mMode==='solo'?`${mScores.A}/5 puzzles`:`A ${mScores.A} : ${mScores.B} B`;$('#mSummary').innerHTML='<h2>One mechanic — four worlds</h2><p>Numbers, route, switches, and shapes use the same loop: plan → lock → reveal.</p>'}
+$('#movesStart').onclick=()=>{analyticsStart('moves',{mode:mMode});mList=shuffle(movePuzzles);mI=0;mTurnI=0;mScores={A:0,B:0};mRound={};$('#movesSetup').classList.add('hidden');$('#movesEnd').classList.add('hidden');$('#movesGame').classList.remove('hidden');mRender()};
+
+/* MATCH 2.0 */
+const connGroups=[['Hg','Mercury'],['Na','Sodium'],['🇯🇵','¥'],['🇰🇷','₩'],['π','3,14'],['H₂O','Water'],['🐝','Honey'],['🔑','Lock'],['DNA','Genes'],['°C','Targetсий']];
+const triGroups=[['🇯🇵','Токио','¥'],['🇰🇷','Сеул','₩'],['🔥','Smoke','Warmth'],['🐝','Honey','Hive'],['🌧️','☂️','Puddle']];
+let mtMode='solo',mtRound=0,mtDeck=[],mtOpen=[],mtMatched=new Set(),mtLock=true,mtPlayer='A',mtScores={A:0,B:0},mtTimeLeft=0,mtTimerId=null,mtConfig=null,mtAttempts=0;
+$('#matchModes').querySelectorAll('button').forEach(b=>b.onclick=()=>{mtMode=b.dataset.v;selectButtons($('#matchModes'),mtMode)});
+function mtConfigForRound(){if(mtRound===0){const groups=shuffle(connGroups).slice(0,8);return{type:'connection',label:'Connections',rule:'Find related pairs',need:2,preview:2.5,time:35,entries:shuffle(groups.flatMap((g,i)=>g.map(face=>({face,g:'c'+i,label:g.join(' ↔ ')})))),goal:16}}
+ if(mtRound===1){const pairs=[[1,9],[2,8],[3,7],[4,6],[0,10],[5,5]];const groups=shuffle(pairs).slice(0,6);let entries=[];groups.forEach((g,i)=>{entries.push({face:String(g[0]),g:'n'+i,label:g.join(' + ')+' = 10'});entries.push({face:String(g[1]),g:'n'+i,label:g.join(' + ')+' = 10'})});return{type:'sum10',label:'Sum',rule:'The pair must total 10',need:2,preview:2,time:28,entries:shuffle(entries),goal:12}}
+ const groups=shuffle(triGroups).slice(0,4);return{type:'triple',label:'Triples',rule:'Build a semantic triple',need:3,preview:3,time:40,entries:shuffle(groups.flatMap((g,i)=>g.map(face=>({face,g:'t'+i,label:g.join(' · ')})))),goal:12}}
+function mtHead(){$('#mtProg').textContent=`Board ${mtRound+1} of 3`;$('#mtTypeBadge').textContent=mtConfig.label;$('#mtTurn').textContent=mtMode==='solo'?'Solo':`Turn ${mtPlayer}`;$('#mtScore').textContent=mtMode==='solo'?`Groups: ${mtScores.A}`:`A ${mtScores.A} : ${mtScores.B} B`;$('#mtTime').textContent=`${Math.ceil(mtTimeLeft)} sec`;$('#mtTimerBar').style.width=Math.max(0,mtTimeLeft/mtConfig.time*100)+'%'}
+function mtRender(preview=false){const box=$('#mtGrid');box.innerHTML='';mtDeck.forEach((card,i)=>{const b=document.createElement('button');b.className='matchCard';const open=preview||mtOpen.includes(i)||mtMatched.has(i);b.textContent=open?card.face:'?';if(!open)b.classList.add('down');if(mtOpen.includes(i))b.classList.add('open');if(mtMatched.has(i))b.classList.add('matched');b.disabled=mtLock||mtMatched.has(i)||mtOpen.includes(i);b.onclick=()=>mtFlip(i);box.appendChild(b)})}
+function mtMakeBoard(){clearSchedules();mtConfig=mtConfigForRound();mtDeck=mtConfig.entries;mtOpen=[];mtMatched=new Set();mtLock=true;mtPlayer='A';mtTimeLeft=mtConfig.time;$('#mtRule').textContent=mtConfig.rule;$('#mtStatus').textContent=`Look for ${mtConfig.preview} sec. Then the board closes.`;mtHead();mtRender(true);later(()=>{mtLock=false;$('#mtStatus').textContent='Промах = −2 secунды.';mtRender(false);mtTimerId=every(()=>{mtTimeLeft-=0.1;mtHead();if(mtTimeLeft<=0){clearInterval(mtTimerId);intervals.delete(mtTimerId);mtBoardDone(true)}},100)},mtConfig.preview*1000)}
+function mtFlip(i){if(mtLock)return;mtOpen.push(i);mtRender(false);if(mtOpen.length<mtConfig.need)return;mtLock=true;mtAttempts++;const cards=mtOpen.map(x=>mtDeck[x]),ok=cards.every(x=>x.g===cards[0].g);
+ if(ok){later(()=>{mtOpen.forEach(x=>mtMatched.add(x));mtScores[mtPlayer]++;$('#mtStatus').textContent='✓ '+cards[0].label;mtOpen=[];mtLock=false;mtHead();mtRender(false);if(mtMatched.size===mtConfig.goal)later(()=>mtBoardDone(false),450)},350)}
+ else{mtTimeLeft=Math.max(0,mtTimeLeft-2);$('#mtStatus').textContent='Промах: −2 sec';later(()=>{mtOpen=[];if(mtMode==='duel')mtPlayer=mtPlayer==='A'?'B':'A';mtLock=false;mtHead();mtRender(false)},650)}
+}
+function mtBoardDone(timeout){clearSchedules();if(mtRound<2){mtRound++;$('#mtStatus').textContent=timeout?'Time. Next rule…':'Board cleared. Next rule…';later(mtMakeBoard,650)}else mtFinish()}
+function mtFinish(){analyticsComplete('match',{mode:mtMode,score_a:mtScores.A,score_b:mtMode==='duel'?mtScores.B:null,attempts:mtAttempts});$('#matchGame').classList.add('hidden');$('#matchEnd').classList.remove('hidden');$('#mtWinner').textContent=mtMode==='solo'?'Series complete':mtScores.A===mtScores.B?'Draw':mtScores.A>mtScores.B?'A wins':'B wins';$('#mtFinalScore').textContent=mtMode==='solo'?`${mtScores.A} groups · ${mtAttempts} attempts`:`A ${mtScores.A} : ${mtScores.B} B`;$('#mtSummary').innerHTML='<h2>Now the board changes how you think</h2><p>Сначала знания и память, потом числовое правило, затем тройки. Wrong сразу чувствуется потерей времени.</p>'}
+$('#matchStart').onclick=()=>{analyticsStart('match',{mode:mtMode});mtRound=0;mtScores={A:0,B:0};mtAttempts=0;$('#matchSetup').classList.add('hidden');$('#matchEnd').classList.add('hidden');$('#matchGame').classList.remove('hidden');mtMakeBoard()};
+
+/* CONTACT */
+const contactSecrets=['AIRPLANE','PARADE','CARAMEL','CAPTAIN','PLANET','TELEPHONE','CARTOON','CAMERA'];
+const clueWords=['APPLE','ARMOR','ARCADE','PARROT','PARK','PARTY','PASTA','CARPET','CANDLE','CANDY','CAPSULE','CAPITAL','PLATE','PLASTIC','PLAZA','TELESCOPE','TELEGRAM','TELECAST','CART','CARBON','CARGO','CAMEL','CAMPAIGN','CAMCORDER'];
+let cN=2,cLength='quick',cList=[],cRounds=1,cRound=0,cPrefixLen=1,cClue=0,cCandidate='',cContacts=0,cSolved=0,cHints=0,cLast='';
+$('#contactPlayers').querySelectorAll('button').forEach(b=>b.onclick=()=>{cN=Number(b.dataset.v);selectButtons($('#contactPlayers'),cN)});
+$('#contactLength').querySelectorAll('button').forEach(b=>b.onclick=()=>{cLength=b.dataset.v;selectButtons($('#contactLength'),cLength)});
+function cSecret(){return cList[cRound]}function cPrefix(){return cSecret().slice(0,cPrefixLen)}function cMask(){return cPrefix()+' '+Array(Math.max(0,cSecret().length-cPrefixLen)).fill('•').join(' ')}
+function cHead(){$('#cProg').textContent=`Secret ${cRound+1} of ${cRounds}`;$('#cClueBadge').textContent=`Clue-giver: ${cClue+1}`;$('#cScore').textContent=`Contactы: ${cContacts}`;$('#cPrefix').textContent=cPrefix();$('#cMask').textContent=cMask()}
+function cPickCandidate(){let pool=clueWords.filter(w=>w!==cSecret()&&w!==cLast&&w.startsWith(cPrefix()));if(!pool.length)pool=clueWords.filter(w=>w!==cSecret()&&w!==cLast&&w[0]===cSecret()[0]);cCandidate=shuffle(pool)[0]||'WORD';cLast=cCandidate}
+function cPrepare(){cHead();$('#cShared').classList.add('hidden');$('#cCheck').classList.add('hidden');$('#cRoundEnd').classList.add('hidden');$('#cPrivate').classList.remove('hidden');cPickCandidate();$('#cPrivateTitle').textContent=`Player ${cClue+1}, only for you`;$('#cShowWord').classList.remove('hidden');$('#cWordBox').classList.add('hidden');$('#cCandidate').textContent=cCandidate}
+$('#cShowWord').onclick=()=>{$('#cShowWord').classList.add('hidden');$('#cWordBox').classList.remove('hidden')};$('#cHideWord').onclick=()=>cShared();
+function cShared(){$('#cPrivate').classList.add('hidden');$('#cCheck').classList.add('hidden');$('#cRoundEnd').classList.add('hidden');$('#cShared').classList.remove('hidden');$('#cSharedTitle').textContent=`The secret starts with «${cPrefix()}…»`;$('#cGuessInput').value='';$('#cGuessMsg').textContent='';cHead()}
+$('#cContactBtn').onclick=()=>{$('#cShared').classList.add('hidden');$('#cCheck').classList.remove('hidden');$('#cCheckResult').classList.add('hidden');let n=3;$('#cCount').textContent=n;const id=every(()=>{n--;$('#cCount').textContent=n>0?n:'0';if(n<=0){clearInterval(id);intervals.delete(id);later(()=>{$('#cRevealCandidate').textContent=cCandidate;$('#cCheckResult').classList.remove('hidden')},250)}},650)};
+$('#cYes').onclick=()=>{cContacts++;cPrefixLen=Math.min(cPrefixLen+1,cSecret().length-1);cClue=(cClue+1)%cN;cShared()};$('#cNo').onclick=()=>{cClue=(cClue+1)%cN;cPrepare()};$('#cNoContact').onclick=()=>{cClue=(cClue+1)%cN;cPrepare()};
+$('#cHintBtn').onclick=()=>{if(cPrefixLen<cSecret().length-1){cPrefixLen++;cHints++;cShared()}else cSolve(false)};
+function norm(s){return s.trim().toUpperCase().replace(/Ё/g,'Е')}$('#cGuessBtn').onclick=()=>{if(norm($('#cGuessInput').value)===norm(cSecret())){cSolved++;cSolve(true)}else $('#cGuessMsg').textContent='Not it. Keep playing.'};
+function cSolve(ok){$('#cPrivate').classList.add('hidden');$('#cShared').classList.add('hidden');$('#cCheck').classList.add('hidden');$('#cRoundEnd').classList.remove('hidden');$('#cSecretReveal').textContent=cSecret();$('#cNext').textContent=cRound===cRounds-1?'Final result':'Следующий secret'}
+$('#cNext').onclick=()=>{if(cRound===cRounds-1)return cFinish();cRound++;cPrefixLen=1;cClue=(cClue+1)%cN;cLast='';cPrepare()};
+function cFinish(){analyticsComplete('contact',{players:cN,length:cLength,contacts:cContacts,secrets_solved:cSolved,hints:cHints});$('#contactGame').classList.add('hidden');$('#contactEnd').classList.remove('hidden');$('#cFinalScore').textContent=`${cContacts} contacts · ${cSolved}/${cRounds} secretов`;$('#cSummary').innerHTML=`<p>Letters revealed without a contact: <strong>${cHints}</strong>. The phone only hosts the mechanic — the conversation stays with the players.</p>`}
+$('#contactStart').onclick=()=>{analyticsStart('contact',{players:cN,length:cLength});cRounds=cLength==='quick'?1:3;cList=shuffle(contactSecrets).slice(0,cRounds);cRound=0;cPrefixLen=1;cClue=0;cContacts=0;cSolved=0;cHints=0;cLast='';$('#contactSetup').classList.add('hidden');$('#contactEnd').classList.add('hidden');$('#contactGame').classList.remove('hidden');cPrepare()};
+
+/* MICROGAME RUSH */
+let rIndex=0,rScore=0,rResults=[],rTaskStart=0,rState={};
+const rushTasks=['blind','reaction','memory','align','rule','precision'];
+function rHead(){$('#rProg').textContent=`Microgame ${rIndex+1} of 6`;$('#rScore').textContent=`Score: ${rScore}`;$('#rProgressBar').style.width=(rIndex/6*100)+'%'}
+function rFinishTask(points,label){clearSchedules();rScore+=points;rResults.push({points,label});$('#rStage').innerHTML=`<div class="${points>0?'resultGood':'resultBad'} big">${label}</div><div class="muted">+${points}</div>`;later(()=>{rIndex++;if(rIndex>=6)rFinish();else rRender()},650)}
+function rRender(){clearSchedules();rHead();const type=rushTasks[rIndex],st=$('#rStage');st.innerHTML='';if(type==='blind'){st.innerHTML='<div class="kicker">Timing</div><h2>Удерживай ровно 3 secунды</h2><button id="rHold" class="holdBtn primary">HOLD</button><div id="rHoldMsg" class="muted">Release when you feel 3.00</div>';const b=$('#rHold');let down=0;b.onpointerdown=e=>{e.preventDefault();down=performance.now();b.setPointerCapture?.(e.pointerId);$('#rHoldMsg').textContent='…'};b.onpointerup=e=>{if(!down)return;const sec=(performance.now()-down)/1000,diff=Math.abs(sec-3),pts=diff<.15?3:diff<.35?2:diff<.7?1:0;rFinishTask(pts,sec.toFixed(2)+' sec')}}
+ if(type==='reaction'){st.innerHTML='<div class="kicker">Reaction</div><h2>Tap when the circle turns green</h2><button id="rReact" class="holdBtn" style="background:#4b5568;text-align:center">WAIT</button>';const b=$('#rReact');let ready=false,done=false,start=0;b.onclick=()=>{if(done)return;if(!ready){done=true;rFinishTask(0,'Too early')}else{done=true;const ms=performance.now()-start,pts=ms<260?3:ms<400?2:1;rFinishTask(pts,Math.round(ms)+' мс')}};later(()=>{if(done)return;ready=true;start=performance.now();b.style.background='var(--good)';b.textContent='TAP!'},1200+Math.random()*1200);later(()=>{if(!done){done=true;rFinishTask(0,'Too slow')}},4200)}
+ if(type==='memory'){const pos=Math.floor(Math.random()*9);st.innerHTML='<div class="kicker">Memory</div><h2>Remember the cell</h2><div id="rMemGrid" class="memoryGrid"></div>';const g=$('#rMemGrid');for(let i=0;i<9;i++){const b=document.createElement('button');b.className='memoryCell';if(i===pos)b.style.background='var(--accent)';b.disabled=true;g.appendChild(b)}later(()=>{[...g.children].forEach((b,i)=>{b.style.background='var(--card2)';b.disabled=false;b.onclick=()=>rFinishTask(i===pos?3:0,i===pos?'Correct':'Miss')});const h=st.querySelector('h2');h.textContent='Where was the dot?'},1300)}
+ if(type==='align'){st.innerHTML='<div class="kicker">Precision</div><h2>Stop the marker in the center</h2><div id="rAlignPad" class="microPad"><div class="centerZone"></div><div id="rMarker" class="microMarker"></div></div><button id="rStop" class="primary" style="width:180px">STOP</button>';let p=0,dir=1;const marker=$('#rMarker'),pad=$('#rAlignPad');const id=every(()=>{p+=dir*2.2;if(p>=98){p=98;dir=-1}if(p<=0){p=0;dir=1}marker.style.left=p+'%'},30);$('#rStop').onclick=()=>{clearInterval(id);intervals.delete(id);const diff=Math.abs(p-50),pts=diff<5?3:diff<12?2:diff<22?1:0;rFinishTask(pts,'Wrong '+diff.toFixed(0)+'%')}} 
+ if(type==='rule'){st.innerHTML='<div class="kicker">Attention</div><h2>Tap a number ABOVE 5</h2><div id="rRuleBtns" class="grid g3" style="width:min(100%,520px)"></div><div id="rRuleMsg" class="muted">5 quick choices</div>';let round=0,ok=0;function next(){if(round>=5){rFinishTask(ok>=5?3:ok>=4?2:ok>=3?1:0,ok+'/5');return}const nums=shuffle([2,3,4,6,7,8]).slice(0,3);const box=$('#rRuleBtns');box.innerHTML='';nums.forEach(n=>{const b=document.createElement('button');b.className='primary';b.style.textAlign='center';b.textContent=n;b.onclick=()=>{if(n>5)ok++;round++;if(round===3){st.querySelector('h2').textContent='Now tap a number BELOW 5';rState.flip=true}else later(next,120)}});box.dataset.flip=round>=3?'1':'0';if(round>=3)[...box.children].forEach((b,i)=>{const n=Number(b.textContent);b.onclick=()=>{if(n<5)ok++;round++;later(next,120)}})}next()}
+ if(type==='precision'){st.innerHTML='<div class="kicker">Dexterity</div><h2>Catch the target 3 times</h2><div id="rPad" class="microPad"><button id="rDot" class="microDot">1</button></div><div id="rPrecMsg" class="muted"></div>';let hits=0;const pad=$('#rPad'),dot=$('#rDot');function move(){dot.style.left=(12+Math.random()*76)+'%';dot.style.top=(16+Math.random()*68)+'%';dot.textContent=hits+1}dot.onclick=e=>{e.stopPropagation();hits++;if(hits>=3)rFinishTask(3,'3/3');else move()};pad.onclick=()=>{$('#rPrecMsg').textContent='Miss';};move();later(()=>{if(hits<3)rFinishTask(hits,hits+'/3')},7000)}
+}
+function rFinish(){analyticsComplete('rush',{score:rScore,max_score:18});$('#rushGame').classList.add('hidden');$('#rushEnd').classList.remove('hidden');$('#rTitle').textContent=rScore>=14?'Strong Rush':rScore>=9?'Not bad':'Room to improve';$('#rFinalScore').textContent=`${rScore}/18`;$('#rSummary').innerHTML='<div class="statGrid">'+rResults.map((x,i)=>`<div class="stat"><strong>${x.points}</strong><span class="muted small">${i+1}. ${x.label}</span></div>`).join('')+'</div>'}
+$('#rushStart').onclick=()=>{analyticsStart('rush',{mode:'solo'});rIndex=0;rScore=0;rResults=[];$('#rushSetup').classList.add('hidden');$('#rushEnd').classList.add('hidden');$('#rushGame').classList.remove('hidden');rRender()};
+
+/* BROKEN TELEPHONE */
+const btPhrases={normal:['A cat missed the bus','A dog stole a sandwich','A penguin got a job at a bank','A robot makes breakfast','A bear reads a newspaper'],weird:['A shark orders pizza on the Moon','A banana goes to a job interview','A ghost repairs a bicycle','A dinosaur takes a selfie in an elevator','An octopus conducts an orchestra'],travel:['A suitcase ran away from the airport','A tourist feeds pigeons with a map','A pilot forgot the airplane in the parking lot','A penguin goes through passport control','A backpack rides a train alone']};
+let btN=3,btTheme='normal',btStep=0,btPhrase='',btChain=[],btCurrentSource=null,btDrawing=false,btCtx=null,btStrokes=[],btCurrentStroke=[];
+$('#btPlayers').querySelectorAll('button').forEach(b=>b.onclick=()=>{btN=Number(b.dataset.v);selectButtons($('#btPlayers'),btN)});$('#btTheme').querySelectorAll('button').forEach(b=>b.onclick=()=>{btTheme=b.dataset.v;selectButtons($('#btTheme'),btTheme)});
+function btPlayer(){return btStep+1}function btType(){return btStep%2===0?'draw':'guess'}
+function btPassToPlayer(){if(btStep>=btN)return btFinish();$('#btDraw').classList.add('hidden');$('#btGuess').classList.add('hidden');$('#btPass').classList.add('hidden');$('#btPrivate').classList.remove('hidden');$('#btProg').textContent=`Step ${btStep+1} of ${btN}`;$('#btPlayerBadge').textContent=`Player ${btPlayer()}`;$('#btPrivateTitle').textContent=btStep===0?`Player 1: get the starting phrase`:`Player ${btPlayer()}: only you see the next item`;$('#btRevealPrivate').textContent='Show me'}
+$('#btRevealPrivate').onclick=()=>{ $('#btPrivate').classList.add('hidden'); if(btType()==='draw')btShowDraw();else btShowGuess() };
+function btCanvasSetup(){const canvas=$('#btCanvas');btCtx=canvas.getContext('2d');btCtx.lineWidth=5;btCtx.lineCap='round';btCtx.strokeStyle='#111';btCtx.clearRect(0,0,canvas.width,canvas.height);btStrokes=[];btCurrentStroke=[];const point=e=>{const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*(canvas.width/r.width),y:(e.clientY-r.top)*(canvas.height/r.height)}};canvas.onpointerdown=e=>{e.preventDefault();btDrawing=true;btCurrentStroke=[point(e)];canvas.setPointerCapture?.(e.pointerId)};canvas.onpointermove=e=>{if(!btDrawing)return;const p=point(e),prev=btCurrentStroke[btCurrentStroke.length-1];btCtx.beginPath();btCtx.moveTo(prev.x,prev.y);btCtx.lineTo(p.x,p.y);btCtx.stroke();btCurrentStroke.push(p)};canvas.onpointerup=()=>{if(btDrawing){btDrawing=false;btStrokes.push([...btCurrentStroke]);btCurrentStroke=[]}}}
+function btRedraw(){const c=$('#btCanvas');btCtx.clearRect(0,0,c.width,c.height);btStrokes.forEach(st=>{for(let i=1;i<st.length;i++){btCtx.beginPath();btCtx.moveTo(st[i-1].x,st[i-1].y);btCtx.lineTo(st[i].x,st[i].y);btCtx.stroke()}})}
+function btShowDraw(){const source=btStep===0?btPhrase:btChain[btStep-1].value;btCurrentSource=source;$('#btDraw').classList.remove('hidden');$('#btDrawTitle').textContent=`Player ${btPlayer()}: draw this`;$('#btDrawSource').textContent=source;later(btCanvasSetup,0)}
+function btShowGuess(){const prev=btChain[btStep-1];$('#btGuess').classList.remove('hidden');$('#btGuessTitle').textContent=`Player ${btPlayer()}: what is drawn here?`;$('#btGuessImage').src=prev.value;$('#btGuessInput').value=''}
+$('#btUndo').onclick=()=>{btStrokes.pop();btRedraw()};$('#btClear').onclick=()=>{btStrokes=[];btRedraw()};
+$('#btSubmitDraw').onclick=()=>{const data=$('#btCanvas').toDataURL('image/png');btChain.push({type:'draw',player:btPlayer(),value:data,source:btCurrentSource});btAfterStep()};
+$('#btSubmitGuess').onclick=()=>{const text=$('#btGuessInput').value.trim();if(!text){$('#btGuessInput').focus();return}btChain.push({type:'guess',player:btPlayer(),value:text});btAfterStep()};
+function btAfterStep(){btStep++;if(btStep>=btN)return btFinish();$('#btDraw').classList.add('hidden');$('#btGuess').classList.add('hidden');$('#btPass').classList.remove('hidden');$('#btPassText').textContent=`Pass the phone to player ${btPlayer()+0}.`;$('#btPassBtn').textContent=`Player ${btPlayer()} ready`}
+$('#btPassBtn').onclick=btPassToPlayer;
+function btFinish(){analyticsComplete('telephone',{players:btN,theme:btTheme,chain_steps:btChain.length});$('#btGame').classList.add('hidden');$('#telephoneEnd').classList.remove('hidden');const box=$('#btChain');box.innerHTML=`<div class="chainItem"><div class="muted small">Original</div><strong>${btPhrase}</strong></div>`;btChain.forEach(x=>{const d=document.createElement('div');d.className='chainItem';d.innerHTML=x.type==='draw'?`<div class="muted small">Player ${x.player} draws</div><img class="chainImage" src="${x.value}" alt="Рисунок">`:`<div class="muted small">Player ${x.player} guesses</div><strong>${x.value}</strong>`;box.appendChild(d)})}
+$('#btStart').onclick=()=>{analyticsStart('telephone',{players:btN,theme:btTheme});btPhrase=shuffle(btPhrases[btTheme])[0];btStep=0;btChain=[];$('#telephoneSetup').classList.add('hidden');$('#telephoneEnd').classList.add('hidden');$('#btGame').classList.remove('hidden');btPassToPlayer()};
+
+/* WRONG QUESTION */
+const wPairs=[
+['What animal would make the best pet?','What animal would make the worst pet?'],
+['What is the first thing you should pack for a trip?','What do people most often forget before a trip?'],
+['What is best to do right after waking up?','What is hardest to do right after waking up?'],
+['What should you order on a first date?','What should you avoid ordering on a first date?'],
+['What sound is pleasant to hear at night?','What sound is scariest to hear at night?'],
+['What would be a great gift for a child?','What would be a terrible gift for a child?'],
+['What is most useful to keep in a car?','What do people most often leave behind in a car?'],
+['What makes a party better?','What ruins a party fastest?']
+];
+let wN=3,wList=[],wRound=0,wPlayer=0,wOdd=0,wScore=0,wCurrent=null,wDiscussId=null;
+$('#wPlayers').querySelectorAll('button').forEach(b=>b.onclick=()=>{wN=Number(b.dataset.v);selectButtons($('#wPlayers'),wN)});
+function wSetupRound(){wCurrent=wList[wRound];wOdd=Math.floor(Math.random()*wN);wPlayer=0;$('#wProg').textContent=`Round ${wRound+1} of 3`;$('#wScore').textContent=`Group: ${wScore}`;$('#wDiscuss').classList.add('hidden');$('#wVote').classList.add('hidden');$('#wReveal').classList.add('hidden');$('#wPrivate').classList.remove('hidden');wPrivate()}
+function wPrivate(){$('#wPrivateTitle').textContent=`Player ${wPlayer+1}`;$('#wRevealBtn').classList.remove('hidden');$('#wPromptWrap').classList.add('hidden')}
+$('#wRevealBtn').onclick=()=>{$('#wRevealBtn').classList.add('hidden');$('#wPromptWrap').classList.remove('hidden');$('#wPrompt').textContent=wPlayer===wOdd?wCurrent[1]:wCurrent[0]};
+$('#wHideBtn').onclick=()=>{wPlayer++;if(wPlayer<wN)wPrivate();else wDiscuss()};
+function wDiscuss(){$('#wPrivate').classList.add('hidden');$('#wDiscuss').classList.remove('hidden');let n=30;$('#wDiscussTimer').textContent=n;wDiscussId=every(()=>{n--;$('#wDiscussTimer').textContent=n;if(n<=0){clearInterval(wDiscussId);intervals.delete(wDiscussId);wVote()}},1000)}
+$('#wVoteNow').onclick=wVote;
+function wVote(){if(wDiscussId){clearInterval(wDiscussId);intervals.delete(wDiscussId)}$('#wDiscuss').classList.add('hidden');$('#wVote').classList.remove('hidden');const box=$('#wVoteGrid');box.innerHTML='';for(let i=0;i<wN;i++){const b=document.createElement('button');b.className='secondary';b.textContent=`Player ${i+1}`;b.onclick=()=>wDoVote(i);box.appendChild(b)}}
+function wDoVote(i){$('#wVote').classList.add('hidden');$('#wReveal').classList.remove('hidden');const ok=i===wOdd;if(ok)wScore++;$('#wRevealTitle').textContent=ok?`Found them! Player ${wOdd+1}`:`Не нашли. Different question был у игрока ${wOdd+1}`;$('#wMainQ').textContent=wCurrent[0];$('#wOddQ').textContent=wCurrent[1];$('#wRevealNote').textContent=ok?'The answers really exposed the mismatch.':'Interesting — where did the alternate question manage to hide?';$('#wNext').textContent=wRound===2?'Final result':'Next round';$('#wScore').textContent=`Group: ${wScore}`}
+$('#wNext').onclick=()=>{if(wRound===2)return wFinish();wRound++;wSetupRound()};
+function wFinish(){analyticsComplete('wrong',{players:wN,group_score:wScore,max_score:3});$('#wrongGame').classList.add('hidden');$('#wrongEnd').classList.remove('hidden');$('#wEndTitle').textContent=wScore===3?'Perfect deduction':wScore>=2?'Almost all found':'The different questions hid well';$('#wEndScore').textContent=`${wScore}/3 found`;$('#wSummary').innerHTML='<p>The main payoff is not the score, but the moment when the reveal makes a strange answer suddenly make perfect sense.</p>'}
+$('#wStart').onclick=()=>{analyticsStart('wrong',{players:wN});wList=shuffle(wPairs).slice(0,3);wRound=0;wScore=0;$('#wrongSetup').classList.add('hidden');$('#wrongEnd').classList.add('hidden');$('#wrongGame').classList.remove('hidden');wSetupRound()};
+})();
+</script>
+</body>
+</html>
