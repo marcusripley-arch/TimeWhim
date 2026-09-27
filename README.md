@@ -1,24 +1,58 @@
-# TimeWhim v0.4 — Tester Build
+# TimeWhim — Public Playtest Lab
 
-A mobile-first validation build for testing the core TimeWhim idea with people who have no prior context.
+TimeWhim is an experimental mobile-first collection of short browser games built around one idea: make a spare few minutes genuinely fun.
 
-## What it tests
+The current public playtest contains seven prototypes and is focused on finding which mechanics deserve further development.
 
-- time-first session creation;
-- Solo / Two / Group context;
-- Fun / Curious / Chill / Connect mood selection;
-- Quiet / Offline / Low battery constraints;
-- local rule-based session composition;
-- Swap, Shorter and Re-plan behavior;
-- completion feedback;
-- anonymous local-only UX event logging;
-- manual JSON export by the tester.
+## Public playtest
 
-## Privacy
+Canonical entry point:
 
-The interactive tester at the repository root keeps its tester data in the browser until manual JSON export.
+`https://time-whim.vercel.app/playtest/`
 
-The public mini-game playtest uses anonymous aggregate product analytics and feedback without requesting a name or email. IP anonymization is enabled and session recording is disabled.
+Russian lab:
+
+`https://time-whim.vercel.app/lab/`
+
+English lab:
+
+`https://time-whim.vercel.app/lab/en/`
+
+The legacy root tester remains available separately for earlier concept validation.
+
+## Current prototypes
+
+- Confidence Duel
+- 3 Moves
+- Match 2.0
+- Contact!
+- Microgame Rush
+- Broken Telephone
+- Wrong Question
+
+## Validation goal
+
+The playtest measures whether a game is understandable without explanation, whether people finish a round, whether they want another round, and what they say in lightweight feedback.
+
+The product deliberately avoids ads, forced sign-up, streak pressure, loot-box mechanics, and other dark-pattern retention loops.
+
+## Analytics and privacy
+
+The public playtest uses an anonymous browser-session ID for aggregate product analytics.
+
+- no name or email is requested;
+- IP anonymization is enabled in PostHog;
+- session recording is disabled;
+- QA and automation traffic is excluded from the launch dashboard;
+- free-text feedback asks testers not to include personal information.
+
+## Browser QA
+
+The repository includes an automated browser QA harness covering all seven games plus mobile layout and the English build.
+
+GitHub Actions runs the Playwright browser gate only when relevant playtest, lab, QA, test, or workflow files change. New commits cancel stale runs. CI analytics requests are intercepted so automated tests do not contaminate production product data.
+
+Current gate target: **11/11 browser tests passing**.
 
 ## Hosting
 
@@ -26,12 +60,8 @@ Canonical public host:
 
 `https://time-whim.vercel.app/`
 
-Canonical public playtest:
+GitHub Pages is retained as a fallback deployment.
 
-`https://time-whim.vercel.app/playtest/`
+## Status
 
-GitHub Pages remains a fallback deployment, not the canonical public address.
-
-## Validation goal
-
-A new user should be able to understand the product and build a session without explanation. Feedback should focus on comprehension, real-use situations, friction, return intent, and willingness to pay a small one-time price.
+The project is in public prototype validation. TimeWhim is a working name, not a cleared final brand.
