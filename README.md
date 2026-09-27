@@ -16,13 +16,21 @@ A mobile-first validation build for testing the core TimeWhim idea with people w
 
 ## Privacy
 
-The build has no account system, analytics SDK, backend, ad network, location access, or automatic report upload. Test data stays in the browser until the tester explicitly exports JSON.
+The interactive tester at the repository root keeps its tester data in the browser until manual JSON export.
+
+The public mini-game playtest uses anonymous aggregate product analytics and feedback without requesting a name or email. IP anonymization is enabled and session recording is disabled.
 
 ## Hosting
 
-The repository includes a GitHub Pages workflow. The intended public URL is:
+Canonical public host:
 
-`https://marcusripley-arch.github.io/TimeWhim/`
+`https://time-whim.vercel.app/`
+
+Canonical public playtest:
+
+`https://time-whim.vercel.app/playtest/`
+
+GitHub Pages remains a fallback deployment, not the canonical public address.
 
 ## Validation goal
 
