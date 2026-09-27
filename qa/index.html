@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>TimeWhim QA</title>
+<style>
+body{font-family:system-ui,sans-serif;background:#0b0e14;color:#f4f7fb;margin:0;padding:20px}.wrap{max-width:900px;margin:auto}.panel{background:#141924;border:1px solid #2b3548;border-radius:18px;padding:18px;margin:12px 0}button{padding:12px 16px;border-radius:12px;border:0;font-weight:800}.pass{color:#52d590}.fail{color:#ff7777}.muted{color:#9aa8bb}pre{white-space:pre-wrap;word-break:break-word}iframe{position:fixed;left:-10000px;top:0;width:900px;height:900px;border:0}
+</style>
+</head>
+<body>
+<div class="wrap"><h1>TimeWhim automated QA</h1><p class="muted">Runs browser-level flows against the deployed Mini Games Lab on this same origin.</p><button id="run">Run QA</button><div id="summary" class="panel">Ready.</div><div id="results"></div></div>
+<iframe id="frame" title="QA target"></iframe>
+<script>
+(()=>{
+const $=s=>document.querySelector(s), frame=$('#frame'), results=$('#results'), summary=$('#summary');
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function log(name,status,detail=''){const d=document.createElement('div');d.className='panel';d.innerHTML=`<strong class="${status==='PASS'?'pass':'fail'}">${status}</strong> · ${name}${detail?`<pre>${String(detail).replace(/[<&]/g,m=>({'<':'&lt;','&':'&amp;'}[m]))}</pre>`:''}`;results.appendChild(d)}
+async function load(path='/lab/'){
+  return new Promise((resolve,reject)=>{
+    const timer=setTimeout(()=>reject(new Error('iframe load timeout')),8000);
+    frame.onload=()=>{clearTimeout(timer);const w=frame.contentWindow,d=frame.contentDocument;
+      const st=w.setTimeout.bind(w),si=w.setInterval.bind(w);
+      w.setTimeout=(fn,ms,...args)=>st(fn,Math.max(0,ms*.04),...args);
+      w.setInterval=(fn,ms,...args)=>si(fn,Math.max(8,ms*.04),...args);
+      w.scrollTo=()=>{};
+      resolve({w,d});
+    };
+    frame.src=path+'?qa='+Date.now();
+  });
+}
+function q(d,s){return d.querySelector(s)}function qa(d,s){return [...d.querySelectorAll(s)]}
+function click(d,s){const e=q(d,s);if(!e)throw new Error('Missing '+s);e.click();return e}
+function visible(d,s){const e=q(d,s);return !!e&&!e.classList.contains('hidden')}
+async function wait(fn,timeout=3000){const end=Date.now()+timeout;while(Date.now()<end){try{if(fn())return true}catch{}await sleep(15)}throw new Error('Wait timeout')}
+async function openGame(game,path='/lab/'){const x=await load(path);click(x.d,`.launch[data-game="${game}"]`);if(!visible(x.d,'#'+game))throw new Error(game+' did not open');return x}
+async function quiz(){let {d}=await openGame('quiz');click(d,'#quizStart');for(let i=0;i<5;i++){await wait(()=>qa(d,'#qAnswers button').length===4);qa(d,'#qAnswers button')[0].click();await wait(()=>visible(d,'#qReveal'));click(d,'#qNext')}if(!visible(d,'#quizEnd'))throw new Error('No quiz end')}
+async function quizDuel(){let {d}=await openGame('quiz');q(d,'#quizModes button[data-v="duel"]').click();click(d,'#quizStart');qa(d,'#qAnswers button')[0].click();q(d,'#qConf button').click();q(d,'#qPredict button').click();await wait(()=>visible(d,'#qPass'));click(d,'#qPassBtn');qa(d,'#qAnswers button')[0].click();q(d,'#qConf button').click();q(d,'#qPredict button').click();await wait(()=>visible(d,'#qReveal'))}
+async function moves(){let {d}=await openGame('moves');click(d,'#movesStart');for(let i=0;i<5;i++){await wait(()=>qa(d,'#mOps button:not([disabled])').length>=3);for(let j=0;j<3;j++)q(d,'#mOps button:not([disabled])').click();await wait(()=>visible(d,'#mReveal'));click(d,'#mNext')}if(!visible(d,'#movesEnd'))throw new Error('No moves end')}
+async function movesDuel(){let {d}=await openGame('moves');q(d,'#movesModes button[data-v="duel"]').click();click(d,'#movesStart');for(let j=0;j<3;j++)q(d,'#mOps button:not([disabled])').click();await wait(()=>visible(d,'#mPass'));click(d,'#mPassBtn');for(let j=0;j<3;j++)q(d,'#mOps button:not([disabled])').click();await wait(()=>visible(d,'#mReveal'))}
+function matchGroups(faces,rule){const groups=[];if(rule.includes('10')){const used=new Set;faces.map(Number).forEach((v,i)=>{if(used.has(i))return;for(let j=i+1;j<faces.length;j++)if(!used.has(j)&&v+Number(faces[j])===10){groups.push([i,j]);used.add(i);used.add(j);break}});return groups}
+ const ruTriple=[['🇯🇵','Токио','¥'],['🇰🇷','Сеул','₩'],['🔥','Дым','Тепло'],['🐝','Мёд','Улей'],['🌧️','☂️','Лужа']];
+ const ruPair=[['Hg','Ртуть'],['Na','Натрий'],['🇯🇵','¥'],['🇰🇷','₩'],['π','3,14'],['H₂O','Вода'],['🐝','Мёд'],['🔑','Замок'],['DNA','Гены'],['°C','Цельсий']];
+ const src=rule.toLowerCase().includes('трой')?ruTriple:ruPair;for(const g of src){const idx=faces.map((x,i)=>g.includes(x)?i:-1).filter(i=>i>=0);if(idx.length===g.length)groups.push(idx)}return groups}
+async function match(){let {d}=await openGame('match');click(d,'#matchStart');for(let r=0;r<3;r++){await wait(()=>qa(d,'#mtGrid .matchCard').length>0);const faces=qa(d,'#mtGrid .matchCard').map(x=>x.textContent),rule=q(d,'#mtRule').textContent,groups=matchGroups(faces,rule);const expected=faces.length===16?8:(rule.includes('10')?6:4);if(groups.length!==expected)throw new Error('Could not map '+rule+' '+JSON.stringify(faces));await wait(()=>qa(d,'#mtGrid .matchCard').every(x=>x.textContent==='?'));for(const g of groups){for(const i of g)qa(d,'#mtGrid .matchCard')[i].click();await sleep(35)}if(r<2)await wait(()=>q(d,'#mtProg').textContent.includes(`Поле ${r+2} из 3`))}await wait(()=>visible(d,'#matchEnd'))}
+async function contact(){let {d}=await openGame('contact');click(d,'#contactStart');click(d,'#cShowWord');const first=q(d,'#cCandidate').textContent;click(d,'#cHideWord');click(d,'#cContactBtn');await wait(()=>visible(d,'#cCheckResult'));click(d,'#cYes');await wait(()=>visible(d,'#cPrivate'));const second=q(d,'#cCandidate').textContent;if(!second||second===first)throw new Error('Candidate did not refresh after Contact');click(d,'#cShowWord');click(d,'#cHideWord');const before=q(d,'#cCandidate').textContent;click(d,'#cHintBtn');await wait(()=>visible(d,'#cPrivate'));const after=q(d,'#cCandidate').textContent;if(!after||after===before)throw new Error('Candidate did not refresh after hint');click(d,'#cShowWord');click(d,'#cHideWord');for(let i=0;i<14&&!visible(d,'#cRoundEnd');i++){click(d,'#cHintBtn');await sleep(10);if(visible(d,'#cPrivate')){click(d,'#cShowWord');click(d,'#cHideWord')}}if(!visible(d,'#cRoundEnd'))throw new Error('Could not finish secret');click(d,'#cNext');if(!visible(d,'#contactEnd'))throw new Error('No contact end')}
+async function rush(){let {w,d}=await openGame('rush');click(d,'#rushStart');await wait(()=>q(d,'#rHold'));const b=q(d,'#rHold');b.dispatchEvent(new w.PointerEvent('pointerdown',{bubbles:true,pointerId:1}));await sleep(20);b.dispatchEvent(new w.PointerEvent('pointerup',{bubbles:true,pointerId:1}));await wait(()=>q(d,'#rReact'));await wait(()=>q(d,'#rReact').textContent.includes('ТАП'));click(d,'#rReact');await wait(()=>q(d,'#rMemGrid button:not([disabled])'));q(d,'#rMemGrid button:not([disabled])').click();await wait(()=>q(d,'#rStop'));click(d,'#rStop');await wait(()=>q(d,'#rRuleBtns'));for(let i=0;i<5;i++){await wait(()=>qa(d,'#rRuleBtns button').length===3);const h=q(d,'#rStage h2').textContent,btns=qa(d,'#rRuleBtns button'),pick=btns.find(x=>h.includes('БОЛЬШЕ')?+x.textContent>5:+x.textContent<5)||btns[0];pick.click();await sleep(15)}await wait(()=>q(d,'#rDot'));for(let i=0;i<3;i++){click(d,'#rDot');await sleep(5)}await wait(()=>visible(d,'#rushEnd'))}
+async function telephone(){let {d}=await openGame('telephone');click(d,'#btStart');click(d,'#btRevealPrivate');await wait(()=>visible(d,'#btDraw'));await sleep(10);click(d,'#btSubmitDraw');click(d,'#btPassBtn');click(d,'#btRevealPrivate');await wait(()=>visible(d,'#btGuess'));q(d,'#btGuessInput').value='кот с чемоданом';click(d,'#btSubmitGuess');click(d,'#btPassBtn');click(d,'#btRevealPrivate');await wait(()=>visible(d,'#btDraw'));await sleep(10);click(d,'#btSubmitDraw');await wait(()=>visible(d,'#telephoneEnd'));if(qa(d,'#btChain .chainItem').length<4)throw new Error('Incomplete reveal chain')}
+async function wrong(){let {d}=await openGame('wrong');click(d,'#wStart');for(let r=0;r<3;r++){for(let p=0;p<3;p++){click(d,'#wRevealBtn');if(!visible(d,'#wPromptWrap'))throw new Error('Prompt not revealed');click(d,'#wHideBtn')}await wait(()=>visible(d,'#wDiscuss'));click(d,'#wVoteNow');await wait(()=>visible(d,'#wVote'));qa(d,'#wVoteGrid button')[0].click();await wait(()=>visible(d,'#wReveal'));click(d,'#wNext')}if(!visible(d,'#wrongEnd'))throw new Error('No wrong-question end')}
+async function mobile(){let {d}=await load('/lab/');frame.style.width='390px';await sleep(30);const w=d.documentElement.scrollWidth,c=d.documentElement.clientWidth;if(w>c+1)throw new Error(`Horizontal overflow ${w}>${c}`);frame.style.width='900px'}
+async function enSmoke(){let {d}=await load('/lab/en/');for(const game of ['quiz','moves','match','contact','rush','telephone','wrong']){const b=q(d,`.launch[data-game="${game}"]`);if(!b)throw new Error('EN missing '+game)}click(d,'.launch[data-game="rush"]');click(d,'#rushStart');await wait(()=>q(d,'#rHold'))}
+const tests=[['Confidence Duel Solo',quiz],['Confidence Duel Duel',quizDuel],['3 Moves Solo',moves],['3 Moves Duel',movesDuel],['Match 2.0 all rules',match],['Contact refresh + hint',contact],['Microgame Rush full sequence',rush],['Broken Telephone 3 players',telephone],['Wrong Question 3 rounds',wrong],['Mobile 390px layout',mobile],['English build smoke',enSmoke]];
+$('#run').onclick=async()=>{results.innerHTML='';$('#run').disabled=true;let pass=0;for(const [name,fn] of tests){try{await fn();log(name,'PASS');pass++}catch(e){log(name,'FAIL',e&&e.stack||e)}}summary.innerHTML=`<strong>${pass}/${tests.length}</strong> tests passed.`;$('#run').disabled=false};
+})();
+</script>
+</body>
+</html>
