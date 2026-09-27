@@ -8,7 +8,7 @@
 :root{--bg:#0b0e14;--panel:#141924;--card:#1b2230;--card2:#20293a;--line:#2b3548;--text:#f4f7fb;--muted:#9aa8bb;--accent:#91a8ff;--good:#52d590;--bad:#ff7777;--warn:#ffd46f;--shadow:0 18px 50px rgba(0,0,0,.28)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
 body{padding:14px;padding-bottom:max(14px,env(safe-area-inset-bottom))}button,input,textarea{font:inherit}.app{max-width:900px;margin:0 auto}
-.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.brand{font-weight:900}.version{color:var(--muted);font-size:12px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.brand{font-weight:900}.version{color:var(--muted);font-size:12px}.topActions{display:flex;align-items:center;gap:8px}.langSwitch{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--card)}.langSwitch a{color:var(--muted);text-decoration:none;padding:8px 10px;font-size:12px;font-weight:900}.langSwitch a.active{background:var(--accent);color:#0c1018}
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px;margin-bottom:12px;box-shadow:var(--shadow)}
 .card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:15px}h1,h2,h3,p{margin-top:0}h1{font-size:28px;margin-bottom:8px}h2{font-size:21px;margin-bottom:10px}h3{font-size:17px;margin-bottom:8px}
 .muted{color:var(--muted)}.small{font-size:13px}.kicker{text-transform:uppercase;letter-spacing:.09em;font-size:11px;color:var(--muted);font-weight:800}.hidden{display:none!important}.center{text-align:center}
@@ -44,10 +44,10 @@ button.primary{background:var(--accent);color:#0c1018;border-color:transparent;f
 </head>
 <body>
 <div class="app">
-<div class="topbar"><div><div class="brand">TimeWhim · Mini Games Lab</div><div class="version">public test v1.3 · anonymous feedback</div></div><button id="homeBtn" class="secondary hidden" style="width:auto;min-height:40px">← Все игры</button></div>
+<div class="topbar"><div><div class="brand">TimeWhim · Mini Games Lab</div><div class="version">public test v1.3 · anonymous feedback</div></div><div class="topActions"><div class="langSwitch"><a id="langRu" class="active" href="./">RU</a><a id="langEn" href="./en/">EN</a></div><button id="homeBtn" class="secondary hidden" style="width:auto;min-height:40px">← Все игры</button></div></div>
 
 <section id="home">
-<div class="panel"><div class="kicker">7 playable candidates</div><h1>Семь разных причин сказать «ещё раунд»</h1><p class="muted">Знания · планирование · память и связи · разговор · реакция · творчество · социальная дедукция.</p></div>
+<div class="panel"><div class="kicker">7 playable candidates</div><h1>Семь разных причин сказать «ещё раунд»</h1><p class="muted">Знания · планирование · память и связи · разговор · реакция · творчество · социальная дедукция.</p><p class="muted small">Публичный playtest: без регистрации, без рекламы, без записи экрана. После игры можно оставить короткий анонимный отзыв.</p></div>
 <div class="gameCards">
 <article class="gameCard"><div class="icon">🧠</div><div><div class="kicker">Knowledge · 2–6 min</div><h2>Confidence Duel</h2><p>Solo — чистая викторина без лишней ставки. В дуэли — уверенность и чтение соперника.</p></div><div class="row"><span class="badge">Solo</span><span class="badge">2 players</span></div><button class="primary launch" data-game="quiz">Играть</button></article>
 <article class="gameCard"><div class="icon">🧩</div><div><div class="kicker">Planning · 2–7 min</div><h2>3 Moves</h2><p>Numbers, Route, Switches и Shapes. Три действия фиксируются до reveal.</p></div><div class="row"><span class="badge">Solo</span><span class="badge">2 players</span></div><button class="primary launch" data-game="moves">Играть</button></article>
@@ -184,8 +184,28 @@ function anonId(){
     return id;
   }catch(e){return 'tw_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2)}
 }
+function attribution(){
+  try{
+    const key='tw_attribution';
+    const saved=sessionStorage.getItem(key);
+    if(saved)return JSON.parse(saved);
+    const q=new URLSearchParams(location.search);
+    const a={
+      utm_source:q.get('utm_source')||null,
+      utm_medium:q.get('utm_medium')||null,
+      utm_campaign:q.get('utm_campaign')||null,
+      utm_content:q.get('utm_content')||null,
+      utm_term:q.get('utm_term')||null,
+      referrer_host:document.referrer?new URL(document.referrer).hostname:null,
+      entry_path:location.pathname
+    };
+    sessionStorage.setItem(key,JSON.stringify(a));
+    return a;
+  }catch(e){return{}}
+}
+const TW_ATTR=attribution();
 function phCapture(event,properties){
-  const body={api_key:PH_TOKEN,event:event,properties:Object.assign({distinct_id:anonId(),'$process_person_profile':false,prototype_version:'1.3-feedback'},properties||{})};
+  const body={api_key:PH_TOKEN,event:event,properties:Object.assign({distinct_id:anonId(),'$process_person_profile':false,prototype_version:'1.3-feedback'},TW_ATTR,properties||{})};
   try{return fetch(PH_HOST+'/i/v0/e/',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),keepalive:true,credentials:'omit'}).catch(()=>{})}catch(e){}
 }
 function analyticsStart(game,props){
@@ -233,6 +253,11 @@ $('#feedbackSend').onclick=()=>{
   $('#feedbackSend').textContent='Спасибо ✓';$('#feedbackSend').disabled=true;
   later(()=>{closeFeedback();$('#feedbackSend').textContent='Отправить'},600);
 };
+try{
+  const qs=location.search||'';
+  $('#langEn').href='./en/'+qs;
+  $('#langRu').href='./'+qs;
+}catch(e){}
 phCapture('lab_loaded',{language:'ru'});
 window.addEventListener('pagehide',()=>analyticsAbandon('pagehide'));
 
