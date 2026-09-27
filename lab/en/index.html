@@ -44,7 +44,7 @@ button.primary{background:var(--accent);color:#0c1018;border-color:transparent;f
 </head>
 <body>
 <div class="app">
-<div class="topbar"><div><div class="brand">TimeWhim · Mini Games Lab</div><div class="version">public test v1.3.7 · anonymous feedback</div></div><div class="topActions"><div class="langSwitch"><a id="langRu" href="../">RU</a><a id="langEn" class="active" href="./">EN</a></div><button id="homeBtn" class="secondary hidden" style="width:auto;min-height:40px">← All games</button></div></div>
+<div class="topbar"><div><div class="brand">TimeWhim · Mini Games Lab</div><div class="version">public test v1.3.8 · anonymous feedback</div></div><div class="topActions"><div class="langSwitch"><a id="langRu" href="../">RU</a><a id="langEn" class="active" href="./">EN</a></div><button id="homeBtn" class="secondary hidden" style="width:auto;min-height:40px">← All games</button></div></div>
 
 <section id="home">
 <div class="panel"><div class="kicker">7 playable candidates</div><h1>Seven different reasons to say “one more round”</h1><p class="muted">Knowledge · planning · memory & connections · conversation · reflex · creativity · social deduction.</p><p class="muted small">Public playtest: no sign-up, no ads, no screen recording. After a game, you can leave a short anonymous review.</p></div>
@@ -205,8 +205,9 @@ function attribution(){
 }
 const TW_ATTR=attribution();
 function phCapture(event,properties){
-  const body={api_key:PH_TOKEN,event:event,distinct_id:anonId(),properties:Object.assign({'$process_person_profile':false,prototype_version:'1.3.7-feedback'},TW_ATTR,properties||{})};
-  try{return fetch(PH_HOST+'/i/v0/e/',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),keepalive:true,credentials:'omit'}).catch(()=>{})}catch(e){}
+  const payload={event:event,distinct_id:anonId(),properties:Object.assign({'$process_person_profile':false,prototype_version:'1.3.8-feedback'},TW_ATTR,properties||{})};
+  const direct=()=>fetch(PH_HOST+'/i/v0/e/',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({api_key:PH_TOKEN,...payload}),keepalive:true,credentials:'omit'}).catch(()=>{});
+  try{return fetch('/api/capture',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),keepalive:true,credentials:'same-origin'}).then(r=>{if(!r.ok)return direct()}).catch(direct)}catch(e){return direct()}
 }
 function analyticsStart(game,props){
   analyticsGame=game;analyticsStartedAt=Date.now();analyticsCompleted=false;
