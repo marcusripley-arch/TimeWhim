@@ -1,0 +1,66 @@
+name: Browser QA
+
+on:
+  pull_request:
+    paths:
+      - "lab/**"
+      - "playtest/**"
+      - "qa/**"
+      - "tests/**"
+      - ".github/workflows/browser-qa.yml"
+  push:
+    branches: ["main"]
+    paths:
+      - "lab/**"
+      - "playtest/**"
+      - "qa/**"
+      - "tests/**"
+      - ".github/workflows/browser-qa.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: browser-qa-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  browser-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Playwright
+        run: |
+          npm install --no-save @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Start local site
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/timewhim-http.log 2>&1 &
+          echo $! > /tmp/timewhim-http.pid
+          for i in {1..20}; do
+            if curl -fsS http://127.0.0.1:4173/qa/ >/dev/null; then
+              exit 0
+            fi
+            sleep 0.5
+          done
+          cat /tmp/timewhim-http.log
+          exit 1
+
+      - name: Run browser gate
+        run: npx playwright test tests/browser-qa.spec.js --reporter=line
+        env:
+          CI: "true"
+
+      - name: Show local server log on failure
+        if: failure()
+        run: cat /tmp/timewhim-http.log || true
