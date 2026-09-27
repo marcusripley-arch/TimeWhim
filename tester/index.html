@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f7f5ef">
+<title>TimeWhim — Interactive Tester</title>
+<link rel="stylesheet" href="../styles.css?v=055">
+</head>
+<body>
+<main class="app">
+  <header class="top"><div class="brand">TimeWhim</div><div class="badge">v0.5.5 · Interactive</div></header>
+  <div class="progress"><i id="progressBar"></i></div>
+
+  <section class="screen active hero" data-screen="welcome">
+    <div class="kicker">A small experiment for free time</div>
+    <h1>Turn free time into something worth remembering.</h1>
+    <p>Tell us how much time you have. We’ll build a small session you can actually do.</p>
+    <button class="primary" id="getStarted">Get Started</button>
+    <div class="footer-note">No account · No ads · Tester data stays on this device until export</div>
+  </section>
+
+  <section class="screen" data-screen="tester">
+    <h2>Tester mode</h2><p>Pick a situation, then use the product naturally.</p>
+    <div class="preset" data-preset="natural"><strong>Natural</strong><div>30 min · Solo · Curious</div></div>
+    <div class="preset" data-preset="social"><strong>Social</strong><div>45 min · Two · Fun · Quiet</div></div>
+    <div class="preset" data-preset="travel"><strong>Travel</strong><div>2h 30m · Solo · Chill · Offline + Low battery</div></div>
+    <button class="secondary" id="chooseFreely">Choose freely instead</button>
+  </section>
+
+  <section class="screen" data-screen="time">
+    <h2>How much time do you have?</h2>
+    <div class="ring-wrap"><div class="ring" id="timeRing"><div class="ring-inner"><div class="ring-number" id="timeNumber">30</div><div class="ring-unit" id="timeUnit">minutes</div></div></div></div>
+    <div class="chips"><button class="chip" data-min="10">10 min</button><button class="chip selected" data-min="30">30 min</button><button class="chip" data-min="60">1 hour</button></div>
+    <input class="slider" id="timeSlider" type="range" min="5" max="720" step="5" value="30" aria-label="Session duration">
+    <button class="primary" id="timeNext">Continue</button>
+  </section>
+
+  <section class="screen" data-screen="people">
+    <h2>Who’s here?</h2><p>Enough detail to choose activities. No names needed.</p>
+    <div class="choice-grid" id="peopleChoices">
+      <button class="choice" data-v="solo">Just me<small>Solo activities</small></button>
+      <button class="choice" data-v="two">Two of us<small>One phone, together</small></button>
+      <button class="choice" data-v="group">Group<small>3 or more</small></button>
+    </div>
+    <div class="chips" id="groupSize" style="display:none"><button class="chip" data-v="3-5">3–5</button><button class="chip" data-v="6+">6+</button></div>
+    <button class="primary" id="peopleNext" disabled>Continue</button>
+  </section>
+
+  <section class="screen" data-screen="mood">
+    <h2>What kind of time?</h2>
+    <div class="choice-grid" id="moodChoices"><button class="choice" data-v="fun">Fun</button><button class="choice" data-v="curious">Curious</button><button class="choice" data-v="chill">Chill</button><button class="choice" data-v="connect">Connect</button></div>
+    <button class="secondary" id="surpriseMood">Surprise me</button><button class="primary" id="moodNext" disabled>Continue</button>
+  </section>
+
+  <section class="screen" data-screen="constraints">
+    <h2>Anything to work around?</h2><p>Optional. Tap whatever matters right now.</p>
+    <div class="chips" id="constraintChips"><button class="chip" data-v="quiet">Quiet</button><button class="chip" data-v="offline">Offline</button><button class="chip" data-v="battery">Low battery</button></div>
+    <button class="primary" id="buildBtn">Build my time</button>
+  </section>
+
+  <section class="screen" data-screen="preview">
+    <div class="ring-wrap"><div class="ring" style="--p:100"><div class="ring-inner"><div class="ring-number" id="previewMinutes">0</div><div class="ring-unit">minutes built</div></div></div></div>
+    <div class="footer-note" id="previewMeta"></div><div class="card timeline" id="timeline"></div>
+    <button class="primary" id="startBtn">Start Session</button><button class="secondary" id="mixBtn">Mix again</button>
+  </section>
+
+  <section class="screen" data-screen="activity">
+    <div class="remaining" id="remainingText"></div>
+    <article class="activity-card">
+      <div class="activity-head"><div class="meta" id="activityType"></div><h2 id="activityTitle"></h2><p id="activityPrompt"></p><div class="footer-note" id="activityDuration"></div></div>
+      <div class="action" id="actionArea"></div>
+    </article>
+    <div class="controls"><button class="control" id="swapBtn">Swap</button><button class="control" id="shorterBtn">Shorter</button><button class="control" id="moodBtn">Mood</button><button class="control" id="moreBtn">More</button></div>
+    <button class="primary" id="doneNext">Done · Next</button>
+  </section>
+
+  <section class="screen" data-screen="complete">
+    <div class="hero"><div class="kicker">Session complete</div><h1>Time well spent.</h1><p><strong id="doneMinutes">0 min</strong> · <span id="doneCount">0 activities</span></p></div>
+    <div class="question"><h3>How did this feel?</h3><div class="feedback-row" data-key="feel"><button>Not for me</button><button>Good</button><button>Great</button></div></div>
+    <div class="question"><h3>Again sometime?</h3><div class="feedback-row" data-key="again"><button>Yes</button><button>Maybe</button><button>No</button></div></div>
+    <button class="primary" id="toFeedback">Finish tester feedback</button><button class="secondary" id="restartBtn">Start another</button>
+  </section>
+
+  <section class="screen" data-screen="feedback">
+    <h2>One last minute.</h2><p>Nothing is sent automatically.</p>
+    <div class="question"><h3>What do you think this product does?</h3><textarea data-field="productMeaning"></textarea></div>
+    <div class="question"><h3>What was unclear?</h3><textarea data-field="unclear"></textarea></div>
+    <div class="question"><h3>What would you normally use instead?</h3><input type="text" data-field="alternative"></div>
+    <div class="question"><h3>When would you realistically use TimeWhim?</h3><textarea data-field="realUse"></textarea></div>
+    <div class="question"><h3>Would you pay ₩4,900 one time?</h3><div class="feedback-row" data-key="pay"><button>Yes</button><button>Maybe</button><button>No</button></div></div>
+    <div class="notice">Export includes interaction timings and tester choices, but no account, name, email, location, or device identifier.</div>
+    <button class="primary" id="exportBtn">Export anonymous JSON</button><button class="secondary" id="feedbackDone">Done</button>
+  </section>
+</main>
+
+<dialog id="moodDialog"><h3>Change the mood</h3><button data-replan="fun">More energy</button><button data-replan="chill">I’m tired</button><button data-replan="connect">More connection</button><button data-replan="curious">Make me think</button><button data-close>Cancel</button></dialog>
+<dialog id="moreDialog"><h3>What changed?</h3><button data-replan="people">We’re more people</button><button data-replan="quiet">Quiet now</button><button data-replan="less">I have less time</button><button id="finishNow">Finish my time</button><button data-close>Cancel</button></dialog>
+<script src="../app.js?v=055"></script>
+<script src="../fix-v05.js?v=055"></script>
+<script src="../fix-v051.js?v=055"></script>
+<script src="../fix-v052.js?v=055"></script>
+<script src="../fix-v053.js?v=055"></script>
+<script src="../fix-v054.js?v=055"></script>
+<script src="../fix-v055.js?v=055"></script>
+</body>
+</html>
